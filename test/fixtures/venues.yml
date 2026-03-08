@@ -2,6 +2,12 @@
 
 one:
   name: MyString
+  venue_id: MyString
+  building: MyString
+  description: MyText
 
 two:
   name: MyString
+  venue_id: MyString
+  building: MyString
+  description: MyText

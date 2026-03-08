@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_06_084952) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_08_091646) do
   create_table "equipment", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "name", null: false
@@ -54,9 +54,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_06_084952) do
   end
 
   create_table "venues", force: :cascade do |t|
+    t.string "building"
     t.datetime "created_at", null: false
+    t.text "description"
     t.string "name", null: false
     t.datetime "updated_at", null: false
+    t.string "venue_id"
+    t.index ["name"], name: "index_venues_on_name"
+    t.index ["venue_id"], name: "index_venues_on_venue_id", unique: true
   end
 
   add_foreign_key "equipment_records", "equipment"

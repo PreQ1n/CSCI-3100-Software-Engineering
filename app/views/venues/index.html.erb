@@ -1,0 +1,42 @@
+<h1>Venue List - CUHK Venue Booking System</h1>
+
+<!-- Search Form -->
+<div style="margin: 20px 0;">
+  <%= form_with url: venues_path, method: :get, local: true do |form| %>
+    <div style="display:flex; gap:10px; align-items:center;">
+      <%= form.text_field :search, 
+                         value: params[:search], 
+                         placeholder: "Search by venue name, building or description...", 
+                         style: "width:320px; padding:8px;" %>
+      <%= form.submit "Search", style: "padding:8px 16px;" %>
+      <%= link_to "Clear Search", venues_path, style: "margin-left:10px;" %>
+    </div>
+  <% end %>
+</div>
+
+<!-- Original Table -->
+<table>
+  <thead>
+    <tr>
+      <th>Venue Name</th>
+      <th>Building</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @venues.each do |venue| %>
+      <tr>
+        <td><%= venue.name %></td>
+        <td><%= venue.building %></td>
+        <td><%= link_to "Show", venue %></td>
+        <td><%= link_to "Edit", edit_venue_path(venue) %></td>
+        <td><%= link_to "Delete", venue, method: :delete, data: { confirm: "Are you sure you want to delete #{venue.name}?" } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to "Add New Venue", new_venue_path %>
