@@ -8,7 +8,7 @@ class VenuesController < ApplicationController
     else
       @venues_table = Venue.all
     end
-  
+
     # Respond to the turbo_frame request
     respond_to do |format|
       format.html # renders index.html.erb

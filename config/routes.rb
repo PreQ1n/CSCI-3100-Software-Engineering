@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  root 'pages#hello'
+  root "pages#hello"
   resources :venues
   resources :cuhk_equipments
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
@@ -23,7 +23,7 @@ Rails.application.routes.draw do
   post "login", to: "sessions#create"
   delete "logout", to: "sessions#destroy"
 
-  get 'confirmation', to: 'pages#confirmation'
-  get 'calendar', to: 'pages#calendar'
-  get 'history', to: 'pages#history'
+  get "confirmation", to: "pages#confirmation"
+  get "calendar", to: "pages#calendar"
+  get "history", to: "pages#history"
 end
