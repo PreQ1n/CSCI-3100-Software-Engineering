@@ -11,7 +11,7 @@ Given("the following user exists:") do |table|
 end
 
 Given("I am not logged in") do
-    visit root_path
+    visit(root_path)
     expect(page).to have_button("Login") 
 end
 
@@ -41,11 +41,11 @@ Then("I am logged out") do
 end
 
 Given("I am on the login page") do
-    visit login_path
+    visit(login_path)
 end
 
 When("I fill in the {string} field with {string}") do |field, value|
-    fill_in field, with: value
+    fill_in(field, with: value)
 end
 
 When("I click the {string} button") do |button|
