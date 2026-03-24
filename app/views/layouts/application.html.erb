@@ -24,6 +24,27 @@
   </head>
 
   <body>
+
+    <%= link_to "Main Page", root_path %>
+    <% if logged_in? %>
+      <%= button_to "Logout", logout_path, method: :delete %>
+    <% else %>
+      <%= link_to "Login", login_path %>
+    <% end %>
+
+    
+    <main>
     <%= yield %>
+    </main>
+    
+    <script>
+    <% if flash[:notice] %>
+    alert("<%= j flash[:notice] %>");
+    <% end %>
+    
+    <% if flash[:alert] %>
+    alert("<%= j flash[:alert] %>");
+    <% end %>
+    </script>
   </body>
 </html>
