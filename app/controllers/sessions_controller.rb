@@ -10,7 +10,7 @@ def create
         session[:user_id] = user.id
         redirect_to root_path
     else
-        flash.now[:alert] = "Invaild Email or Password"
+        flash.now[:alert] = "Invalid Email or Password"
         render :new, status: :unprocessable_entity
     end
 end
