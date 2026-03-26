@@ -6,6 +6,32 @@
 
 
 require 'cucumber/rails'
+require 'capybara/cuprite'
+
+Capybara.register_driver :cuprite do |app|
+  Capybara::Cuprite::Driver.new(
+    app,
+    window_size: [1200, 800],
+    timeout: 10,
+    headless: true,
+    browser_options: {
+      'no-sandbox': nil,
+      'disable-gpu': nil,
+      'disable-dev-shm-usage': nil
+    }
+  )
+end
+
+Capybara.default_driver = :rack_test
+Capybara.javascript_driver = :cuprite
+
+Before('@javascript') do
+  Capybara.current_driver = Capybara.javascript_driver
+end
+
+After('@javascript') do
+  Capybara.use_default_driver
+end
 
 # By default, any exception happening in your Rails application will bubble up
 # to Cucumber so that your scenario will fail. This is a different from how

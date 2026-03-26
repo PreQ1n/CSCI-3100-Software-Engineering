@@ -12,18 +12,22 @@ end
 
 Given("I am not logged in") do
     visit(root_path)
-    expect(page).to have_button("Login") 
+    expect(page).to have_link("Login") 
 end
 
 Given("I am logged in") do
     step "I am on the login page"
     step 'I fill in the "Email" field with "student@gmail.com"'
     step 'I fill in the "Password" field with "111"'
-    step 'I click the "Login" button'
+    step 'I press the "Login" button'
 end
 
 When("I press the {string} button") do |button_name|
-    click_on(button_name)
+    click_button(button_name)
+end
+
+When("I press the {string} link") do |link_name|
+    click_on(link_name)
 end
 
 Then("I will navigate to the login page") do
@@ -36,7 +40,7 @@ end
 
 Then("I am logged out") do
     expect(page).to have_current_path(root_path)
-    expect(page).to have_button("Login")
+    expect(page).to have_link("Login")
     expect(page).not_to have_button("Logout")
 end
 
@@ -49,11 +53,13 @@ When("I fill in the {string} field with {string}") do |field, value|
 end
 
 When("I click the {string} button") do |button|
-    click_button(button)
+    @alert_message = accept_alert do
+        click_button(button)
+  end
 end
 
 Then("I should see message {string}") do |msg|
-    expect(page).to have_css('.flash-success', '.flash-error', text: msg)
+    expect(@alert_message).to eq(msg)
 end
 
 Then("I should on the main page") do
