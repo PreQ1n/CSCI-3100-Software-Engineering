@@ -83,10 +83,6 @@ Given("there is a {string} button") do |button|
     expect(page).to have_button(button)
 end
 
-When ("I click the {string} button") do |button|
-    click_button(button)
-end
-
 When("I have a new confirmation") do
 
     @venue = Venue.create!(

@@ -79,4 +79,5 @@ group :test do
   gem 'cucumber-rails', require: false
   gem 'rspec-expectations'
   gem "rspec"
+  gem 'cuprite'
 end
