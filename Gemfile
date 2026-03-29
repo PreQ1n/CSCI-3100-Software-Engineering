@@ -53,11 +53,11 @@ group :development, :test do
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
 
-  gem 'cucumber-rails', require: false
+  gem "cucumber-rails", require: false
 
-  gem 'rspec-rails'
+  gem "rspec-rails"
 
-  gem 'database_cleaner'
+  gem "database_cleaner"
 
   gem "factory_bot_rails"
 
@@ -67,7 +67,6 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
-
 end
 
 group :test do
@@ -79,5 +78,9 @@ group :test do
   gem 'cucumber-rails', require: false
   gem 'rspec-expectations'
   gem "rspec"
-  gem 'cuprite'
+  gem "cuprite"
+  gem "cucumber-rails", require: false
+  gem "database_cleaner-active_record"
+  gem "email_spec"
+  gem "rspec-rails"
 end

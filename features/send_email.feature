@@ -6,24 +6,24 @@ Feature: send email to users as a confirmation record of their booking
 
 Background:
   Given the following users exist:
-    | id | email             |
-    | 1  | user@example.com  |
+    | email             |
+    | user@example.com  |
 
   And the following venues exist:
-    | id | name   | building |
-    | 1  | Hall A | Block 1  |
+    | name   | building |
+    | Hall A | Block 1  |
 
   And the following equipment exist:
-    | id | name      | quantity |
-    | 1  | Projector | 5        |
+    | name      | quantity |
+    | Projector | 5        |
 
   And the following venue_records exist:
-    | date       | is_absence | time  | user_id | venue_id |
-    | 08-03-2026 | false      | 11:00 | 1       | 1        |
+    | date       | is_absence | time  |
+    | 08-03-2026 | false      | 11:00 |
 
   And the following equipment_records exist:
-    | date       | equipment_id | is_absence | time  | user_id |
-    | 08-03-2026 | 1            | false      | 11:00 | 1       |
+    | date       | is_absence | time  |
+    | 08-03-2026 | false      | 11:00 |
 
 # Confirmation Emails
 
