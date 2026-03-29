@@ -1,5 +1,7 @@
 import { Application } from "@hotwired/stimulus"
 
+import "slim-select/dist/slimselect.css"
+
 const application = Application.start()
 
 // Configure Stimulus development experience
