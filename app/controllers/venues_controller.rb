@@ -4,16 +4,11 @@ class VenuesController < ApplicationController
   # GET /venues or /venues.json
   def index
     @venues = Venue.all
-  
-    if params[:search].present? && params[:search_column].present?
-      column = params[:search_column]
-  
-      if %w[name building description].include?(column)
-        @venues = @venues.where("LOWER(#{column}) LIKE ?", "%#{params[:search].downcase}%")
-      end
+    if params[:search].present?
+      column = params[:search_column] || "name"
+      # Basic search logic
+      @venues = @venues.where("#{column} LIKE ?", "%#{params[:search]}%")
     end
-  
-    @venues = @venues.order(:name)
   end
 
   # GET /venues/1 or /venues/1.json

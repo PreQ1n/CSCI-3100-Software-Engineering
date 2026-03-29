@@ -12,6 +12,7 @@ export default class extends Controller {
         searchHighlight: true
       }
     })
+    console.log("Search controller is CONNECTED!");
   }
 
   disconnect() {
