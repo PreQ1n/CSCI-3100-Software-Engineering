@@ -3,11 +3,24 @@ class VenuesController < ApplicationController
 
   # GET /venues or /venues.json
   def index
+    # 1. 基礎查詢
     @venues = Venue.all
+  
+    # 2. 搜尋邏輯
     if params[:search].present?
-      column = params[:search_column] || "name"
-      # Basic search logic
+      # 安全白名單：確保欄位名稱是我們允許的
+      allowed_columns = ["name", "building", "description"]
+      column = allowed_columns.include?(params[:search_column]) ? params[:search_column] : "name"
+      
       @venues = @venues.where("#{column} LIKE ?", "%#{params[:search]}%")
+    end
+  
+    # 3. 回應處理
+    if turbo_frame_request?
+      # 注意：這裡的 locals 名稱要跟 Partial 內使用的變數名一致
+      render partial: "venues_table", locals: { venues: @venues }
+    else
+      render :index
     end
   end
 

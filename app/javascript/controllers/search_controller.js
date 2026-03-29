@@ -1,8 +1,13 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  submit() {
-    // Clear the previous timer
+
+  connect(){
+    console.log("Search controller 已成功連接！")
+  }
+
+  search() {
+    console.log('Test!')
     clearTimeout(this.timeout)
 
     // Set a new timer to submit after 300ms of no typing
