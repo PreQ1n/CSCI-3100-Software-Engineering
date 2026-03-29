@@ -490,6 +490,9 @@ DEPENDENCIES
   cucumber-rails
   cuprite
   database_cleaner
+  cucumber
+  cucumber-rails
+  database_cleaner-active_record
   debug
   factory_bot_rails
   image_processing (~> 1.2)
@@ -503,6 +506,7 @@ DEPENDENCIES
   rails-controller-testing
   rspec
   rspec-rails
+  rspec-expectations
   rubocop-rails-omakase
   selenium-webdriver
   solid_cable

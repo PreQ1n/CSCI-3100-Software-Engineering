@@ -23,31 +23,39 @@ end
 
 Capybara.javascript_driver = :selenium_chrome_headless
 require 'capybara/cuprite'
-
 Capybara.register_driver :cuprite do |app|
-  Capybara::Cuprite::Driver.new(
+Capybara::Cuprite::Driver.new(
     app,
     window_size: [1200, 800],
     timeout: 10,
     headless: true,
     browser_options: {
-      'no-sandbox': nil,
-      'disable-gpu': nil,
-      'disable-dev-shm-usage': nil
+'no-sandbox': nil,
+'disable-gpu': nil,
+'disable-dev-shm-usage': nil
     }
   )
 end
-
 Capybara.default_driver = :rack_test
 Capybara.javascript_driver = :cuprite
-
 Before('@javascript') do
-  Capybara.current_driver = Capybara.javascript_driver
+Capybara.current_driver = Capybara.javascript_driver
 end
-
 After('@javascript') do
-  Capybara.use_default_driver
+Capybara.use_default_driver
 end
+require 'rspec/expectations'
+# features/support/env.rb
+require 'capybara/cucumber'
+require 'selenium-webdriver'
+Capybara.register_driver :selenium_chrome_headless do |app|
+  options = Selenium::WebDriver::Chrome::Options.new
+  options.add_argument('--headless')
+  options.add_argument('--disable-gpu')
+  options.add_argument('--window-size=1280,800')
+Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
+end
+Capybara.javascript_driver = :selenium_chrome_headless
 
 # By default, any exception happening in your Rails application will bubble up
 # to Cucumber so that your scenario will fail. This is a different from how
