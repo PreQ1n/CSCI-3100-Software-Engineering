@@ -24,6 +24,37 @@
   </head>
 
   <body>
+
+    <%= link_to "Main Page", root_path %>
+    <% if logged_in? %>
+
+      <div class="dropdown">
+        <button class="dropdown-button">Account</button>
+        <div class="dropdown-content">
+          <a href="/confirmation">Confirmation</a>
+          <a href="/calendar">Calendar</a>
+          <a href="/history">History</a>
+        </div>
+      </div>
+
+      <%= button_to "Logout", logout_path, method: :delete %>
+    <% else %>
+      <%= link_to "Login", login_path %>
+    <% end %>
+
+    
+    <main>
     <%= yield %>
+    </main>
+    
+    <script>
+    <% if flash[:notice] %>
+    alert("<%= j flash[:notice] %>");
+    <% end %>
+    
+    <% if flash[:alert] %>
+    alert("<%= j flash[:alert] %>");
+    <% end %>
+    </script>
   </body>
 </html>
