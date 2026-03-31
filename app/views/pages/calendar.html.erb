@@ -1,6 +1,6 @@
 <h1 style="text-align: center; margin: 20px 0;">Calendar Page</h1>
 
-<div style="display: flex; justify-content: center; width: 100%;">
+
 <div class="calendar-container">
 <%= month_calendar(events: @bookings_date, 
                    start_attribute: :start_time) do |date, bookings| %>
@@ -24,4 +24,3 @@
     <% end %>
   <% end %>
 <% end %>
-</div>
