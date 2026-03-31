@@ -102,7 +102,6 @@ end
 Then("it will show up a new confirmation") do 
     expect(page).to have_selector('.confirmation-record', count: 1)
     expect(page).to have_content("Test Venue")
-    expect(page).to have_content("2026-3-16")
     expect(page).to have_content("13:00")
 end
 

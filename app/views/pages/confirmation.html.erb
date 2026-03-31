@@ -1,1 +1,53 @@
 <h1>Confirmation Page</h1>
+
+<h2>Venue Booking Confirmation</h2>
+<% if @venue_records.any? %>
+    <table class="table">
+        <thead>
+            <tr>
+                <th> Venue_name </th>
+                <th> Time </th>
+                <th> Confirm </th>
+            </tr>
+        </thead>
+        <tbody>
+            <% @venue_records.each do |record| %>
+                <tr>
+                    <td><%= record.venue_name %> </td>
+                    <td><%= record.time.strftime("%H:%M") %> </td>
+                    <% if !record.is_absence %>
+                        <td> Confirmed! </td>
+                    <% else %>
+                        <td> <%= button_to "✅Press to Confirm", confirm_path(type: "venue", id: record.id), method: :post %> </td>
+                    <% end %>
+                </tr>
+            <% end %>
+        </tbody>    
+    </table>
+<% end %>
+
+<h2>Equipment Booking Confirmation</h2>
+<% if @equipment_records.any? %>
+    <table class="table">
+        <thead>
+            <tr>
+                <th> Equipment_name </th>
+                <th> Time </th>
+                <th> Confirm </th>
+            </tr>
+        </thead>
+        <tbody>
+            <% @equipment_records.each do |record| %>
+                <tr>
+                    <td><%= record.equipment_name %> </td>
+                    <td><%= record.time.strftime("%H:%M") %> </td>
+                    <% if !record.is_absence %>
+                        <td> Confirmed! </td>
+                    <% else %>
+                        <%= button_to "✅Press to Confirm", confirm_path(type: "equipment", id: record.id), method: :post %>
+                    <% end %>
+                </tr>
+            <% end %>
+        </tbody>    
+    </table>
+<% end %>

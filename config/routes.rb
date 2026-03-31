@@ -23,4 +23,7 @@ Rails.application.routes.draw do
   get 'confirmation', to: 'pages#confirmation'
   get 'calendar', to: 'pages#calendar'
   get 'history', to: 'pages#history'
+
+  post 'confirm', to: 'confirmation#confirm'
+
 end
