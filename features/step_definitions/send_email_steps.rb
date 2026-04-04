@@ -98,24 +98,21 @@ When (/^the user presses "([^"]*)"$/) do |button|
 
   target = @venue_record || @equipment_record
   recipient = @current_user
-  pending "BookingMailer not yet created"
   if target.is_a?(VenueRecord)
-    BookingMailer.venue_confirmation(recipient, target).deliver_now
+    BookingMailer.venue_booking_confirmed(recipient, target).deliver_now
   else
-    BookingMailer.equipment_confirmation(recipient, target).deliver_now
+    BookingMailer.equipment_booking_confirmed(recipient, target).deliver_now
   end
 end
 
 When (/^the staff marks the venue booking as absent and presses "([^"]*)"$/) do |button|
   @venue_record.update!(is_absence: true)
-  pending "BookingMailer not yet created"
-  BookingMailer.venue_cancellation(@booking_user, @venue_record).deliver_now
+  BookingMailer.venue_booking_cancelled(@booking_user, @venue_record).deliver_now
 end
 
 When (/^the staff marks the equipment booking as absent and presses "([^"]*)"$/) do |button|
   @equipment_record.update!(is_absence: true)
-  pending "BookingMailer not yet created"
-  BookingMailer.equipment_cancellation(@booking_user, @equipment_record).deliver_now
+  BookingMailer.equipment_booking_cancelled(@booking_user, @equipment_record).deliver_now
 end
 
 # Assertion Steps
@@ -144,14 +141,14 @@ Then (/^the email subject should contain "([^"]*)"$/) do |subject_text|
 end
 
 Then (/^the email body should include the venue name and booking date and time$/) do
-  body = @last_email.body.to_s
+  body = @last_email.html_part&.body&.decoded
   expect(body).to include(@venue_record.venue.name)
   expect(body).to include(@venue_record.date.to_s)
   expect(body).to include(@venue_record.time.strftime("%H:%M"))
 end
 
 Then (/^the email body should include the equipment name and booking date and time$/) do
-  body = @last_email.body.to_s
+  body = @last_email.html_part&.body&.decoded
   expect(body).to include(@equipment_record.equipment.name)
   expect(body).to include(@equipment_record.date.to_s)
   expect(body).to include(@equipment_record.time.strftime("%H:%M"))
