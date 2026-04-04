@@ -1,60 +1,86 @@
 require "rails_helper"
 
 RSpec.describe BookingMailer, type: :mailer do
-  describe "venue_booking_confirmed" do
-    let(:mail) { BookingMailer.venue_booking_confirmed }
+  let(:user)         { User.create!(email: "user@example.com", password: "password123", password_confirmation: "password123") }
+  let(:venue)        { Venue.create!(name: "Hall A", building: "Block B") }
+  let(:venue_record) { VenueRecord.create!(user: user, venue: venue, date: Date.today, time: "10:00", is_absence: false) }
 
-    it "renders the headers" do
-      expect(mail.subject).to eq("Venue booking confirmed")
-      expect(mail.to).to eq(["to@example.org"])
-      expect(mail.from).to eq(["from@example.com"])
+  let(:equipment)        { Equipment.create!(name: "Projector", quantity: 5) }
+  let(:equipment_record) { EquipmentRecord.create!(user: user, equipment: equipment, date: Date.today, time: "10:00", is_absence: false) }
+
+  # venue_booking_confirmed function
+  describe "#venue_booking_confirmed" do
+    let(:mail) { BookingMailer.venue_booking_confirmed(user, venue_record) }
+
+    it "sends to the correct recipient" do
+      expect(mail.to).to include(user.email)
     end
 
-    it "renders the body" do
-      expect(mail.body.encoded).to match("Hi")
-    end
-  end
-
-  describe "equipment_booking_confirmed" do
-    let(:mail) { BookingMailer.equipment_booking_confirmed }
-
-    it "renders the headers" do
-      expect(mail.subject).to eq("Equipment booking confirmed")
-      expect(mail.to).to eq(["to@example.org"])
-      expect(mail.from).to eq(["from@example.com"])
+    it "has correct subject" do
+      expect(mail.subject).to eq("Booking Confirmation")
     end
 
-    it "renders the body" do
-      expect(mail.body.encoded).to match("Hi")
-    end
-  end
-
-  describe "venue_booking_cancelled" do
-    let(:mail) { BookingMailer.venue_booking_cancelled }
-
-    it "renders the headers" do
-      expect(mail.subject).to eq("Venue booking cancelled")
-      expect(mail.to).to eq(["to@example.org"])
-      expect(mail.from).to eq(["from@example.com"])
+    it "includes venue name in body" do
+      expect(mail.html_part.body.decoded).to include(venue.name)
     end
 
-    it "renders the body" do
-      expect(mail.body.encoded).to match("Hi")
+    it "includes booking date in body" do
+      expect(mail.html_part.body.decoded).to include(venue_record.date.to_s)
+    end
+
+    it "includes booking time in body" do
+      expect(mail.html_part.body.decoded).to include(venue_record.time.strftime("%H:%M"))
     end
   end
 
-  describe "equipment_booking_cancelled" do
-    let(:mail) { BookingMailer.equipment_booking_cancelled }
+  # venue_booking_cancelled function
+  describe "#venue_booking_cancelled" do
+    let(:mail) { BookingMailer.venue_booking_cancelled(user, venue_record) }
 
-    it "renders the headers" do
-      expect(mail.subject).to eq("Equipment booking cancelled")
-      expect(mail.to).to eq(["to@example.org"])
-      expect(mail.from).to eq(["from@example.com"])
+    it "sends to the correct recipient" do
+      expect(mail.to).to include(user.email)
     end
 
-    it "renders the body" do
-      expect(mail.body.encoded).to match("Hi")
+    it "has correct subject" do
+      expect(mail.subject).to eq("Booking Cancellation")
+    end
+
+    it "includes venue name in body" do
+      expect(mail.html_part.body.decoded).to include(venue.name)
     end
   end
 
+  # equipment_booking_confirmed function
+  describe "#equipment_booking_confirmed" do
+    let(:mail) { BookingMailer.equipment_booking_confirmed(user, equipment_record) }
+
+    it "sends to the correct recipient" do
+      expect(mail.to).to include(user.email)
+    end
+
+    it "has correct subject" do
+      expect(mail.subject).to eq("Booking Confirmation")
+    end
+
+    it "includes equipment name in body" do
+      expect(mail.html_part.body.decoded).to include(equipment.name)
+    end
+  end
+
+  # equipment_booking_cancelled function
+  describe "#equipment_booking_cancelled" do
+    let(:mail) { BookingMailer.equipment_booking_cancelled(user, equipment_record) }
+
+    it "sends to the correct recipient" do
+      expect(mail.to).to include(user.email)
+    end
+
+    it "has correct subject" do
+      expect(mail.subject).to eq("Booking Cancellation")
+    end
+
+    it "includes equipment name in body" do
+      expect(mail.html_part.body.decoded).to include(equipment.name)
+    end
+  end
 end
