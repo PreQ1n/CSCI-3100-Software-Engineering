@@ -24,24 +24,16 @@
                 } do |form| %>
     
     <div style="display: flex; gap: 10px; align-items: center;">
-      <%= form.select :search_column, 
-                      [["Venue Name", "name"], ["Building", "building"], ["Description", "description"]], 
-                      { selected: params[:search_column] }, 
-                      { 
-                        data: { 
-                          controller: "slim-select", 
-                          action: "change->search#search" 
-                        } 
-                      } %>
       <%= form.text_field :search,
                          value: params[:search],
-                         placeholder: "Start typing to search...",
+                         placeholder: "Start typing to search venue name...",
                          autocomplete: "off",
                          list: "venue_suggestions",
                          data: { 
                            action: "input->search#search"
                          },
                          style: "width: 300px; padding: 8px;" %>
+    
       <%= form.button type: :submit, style: "padding: 8px 20px; display: flex; align-items: center; gap: 8px; cursor: pointer; background-color: #f0f0f0; border: 1px solid #ccc; border-radius: 4px;" do %>
         <i class="bi bi-search"></i> Search
       <% end %>      
@@ -53,12 +45,13 @@
   <% end %>
 </div>
 
-<%# 自動補完列表 %>
 <datalist id="venue_suggestions">
   <% Venue.order(:name).each do |venue| %>
     <option value="<%= venue.name %>">
   <% end %>
 </datalist>
+
+
 
 
 <%= render "venues_table", venues: @venues %>

@@ -12,7 +12,6 @@
         <% if venues.any? %>
           <% venues.each do |venue| %>
             <tr>
-              <%# 使用 highlight 輔助方法 %>
               <td><%= highlight(venue.name, params[:search]) %></td>
               <td><%= highlight(venue.building, params[:search]) %></td>
               <td><%= highlight(venue.description, params[:search]) %></td>
