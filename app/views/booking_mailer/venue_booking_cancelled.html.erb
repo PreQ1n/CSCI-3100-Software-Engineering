@@ -1,11 +1,11 @@
-<h2>Booking Cancellation</h2>
-<p>Dear <%= @user.email %>,</p>
+<h2>Booking Cancelled</h2>
+<p>Dear <%= user.email %>,</p>
 <p>Your venue booking has been marked as cancelled.</p>
 <p>Here are your booking details:</p>
 <ul>
-  <li><strong>Venue:</strong> <%= @venue.name %></li>
-  <li><strong>Building:</strong> <%= @venue.building %></li>
-  <li><strong>Date:</strong> <%= @venue_record.date %></li>
-  <li><strong>Time:</strong> <%= @venue_record.time.strftime("%H:%M") %></li>
+  <li><strong>Venue:</strong> <%= venue.name %></li>
+  <li><strong>Building:</strong> <%= venue.building %></li>
+  <li><strong>Date:</strong> <%= venue_record.date %></li>
+  <li><strong>Time:</strong> <%= venue_record.time.strftime("%H:%M") %></li>
 </ul>
 <p>If you have any questions, please contact support.</p>
