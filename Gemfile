@@ -64,6 +64,9 @@ group :development, :test do
   gem "rails-controller-testing"
 
   gem "simple_calendar"
+
+  gem 'faker'
+
 end
 
 group :development do

@@ -24,6 +24,8 @@ class PagesController < ApplicationController
     
     equipment_bookings = EquipmentRecord.where(date: start_date..end_date).includes(:equipment)
     
+    #simple_calendar gem require a start_time variable, so make a new struct to pass 
+    #We can idenify the record is equipment or venue by checking its nullity.
     @bookings_date = (equipment_bookings + venue_bookings).map do |record|
       start_time = DateTime.new(record.date.year, record.date.month, record.date.day, record.time.hour, record.time.min, 0)
 
