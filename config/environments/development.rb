@@ -81,25 +81,14 @@ Rails.application.configure do
   # config.generators.apply_rubocop_autocorrect_after_generate!
   #
   config.action_mailer.delivery_method = :smtp
-
   config.action_mailer.smtp_settings = {
-    address:              "smtp-relay.brevo.com",
+    address:              "smtp.gmail.com",
     port:                 587,
-    user_name:            ENV["BREVO_USER"],
-    password:             ENV["BREVO_LOGIN"],
-    authentication:       :login,
+    domain:               "gmail.com",
+    user_name:            "csci31002526t2project@gmail.com",
+    password:             ENV["GMAIL_APP_PASSWORD"],
+    authentication:       "plain",
     enable_starttls_auto: true
   }
-  # BookingMailer
-  # -----
-  # config.action_mailer.smtp_settings = {
-  #   address:              "smtp.gmail.com",
-  #   port:                 587,
-  #   domain:               "gmail.com",
-  #   user_name:            "csci31002526t2project@gmail.com",
-  #   password:             ENV["GMAIL_APP_PASSWORD"],
-  #   authentication:       "plain",
-  #   enable_starttls_auto: true
-  # }
   config.action_mailer.raise_delivery_errors = true
 end
