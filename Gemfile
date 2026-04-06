@@ -24,7 +24,7 @@ gem "bcrypt", "~> 3.1.7"
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 
 # Mail API
-gem "sendgrid-ruby"
+gem "sib-api-v3-sdk"
 
 # Use the database-backed adapters for Rails.cache, Active Job, and Action Cable
 gem "solid_cache"
