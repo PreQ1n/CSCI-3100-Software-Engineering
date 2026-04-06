@@ -92,27 +92,23 @@ end
 # Action Step
 # -----
 When (/^the user presses "([^"]*)"$/) do |button|
-  # User confirms their own booking — sets is_absence: false and sends confirmation
-  @venue_record&.update!(is_absence: false)
-  @equipment_record&.update!(is_absence: false)
-
   target = @venue_record || @equipment_record
   recipient = @current_user
   if target.is_a?(VenueRecord)
-    BookingMailer.venue_booking_confirmed(recipient, target).deliver_now
+    BrevoEmail.venue_booking_confirmed(recipient, target)
   else
-    BookingMailer.equipment_booking_confirmed(recipient, target).deliver_now
+    BrevoEmail.equipment_booking_confirmed(recipient, target)
   end
 end
 
 When (/^the staff marks the venue booking as absent and presses "([^"]*)"$/) do |button|
   @venue_record.update!(is_absence: true)
-  BookingMailer.venue_booking_cancelled(@booking_user, @venue_record).deliver_now
+  BrevoEmail.venue_booking_cancelled(@booking_user, @venue_record)
 end
 
 When (/^the staff marks the equipment booking as absent and presses "([^"]*)"$/) do |button|
   @equipment_record.update!(is_absence: true)
-  BookingMailer.equipment_booking_cancelled(@booking_user, @equipment_record).deliver_now
+  BrevoEmail.equipment_booking_cancelled(@booking_user, @equipment_record)
 end
 
 # Assertion Steps
@@ -124,34 +120,26 @@ Then (/^the equipment_record is_absence should be (true|false)$/) do |value|
   expect(@equipment_record.reload.is_absence).to eq(value == "true")
 end
 
-Then (/^the user "([^"]*)" should receive a confirmation email$/) do |email|
-  @last_email = ActionMailer::Base.deliveries.last
+Then (/^the user "([^"]*)" should receive a ([^"]*) email$/) do |email, type|
+  @last_email = BrevoEmail.deliveries.last
   expect(@last_email).not_to be_nil
-  expect(@last_email.to).to include(email)
-end
-
-Then (/^the user "([^"]*)" should receive a cancellation email$/) do |email|
-  @last_email = ActionMailer::Base.deliveries.last
-  expect(@last_email).not_to be_nil
-  expect(@last_email.to).to include(email)
+  expect(@last_email[:to]).to eq(email)
 end
 
 Then (/^the email subject should contain "([^"]*)"$/) do |subject_text|
-  expect(@last_email.subject).to include(subject_text)
+  expect(@last_email[:subject]).to include(subject_text)
 end
 
 Then (/^the email body should include the venue name and booking date and time$/) do
-  body = @last_email.html_part&.body&.decoded
-  expect(body).to include(@venue_record.venue.name)
-  expect(body).to include(@venue_record.date.to_s)
-  expect(body).to include(@venue_record.time.strftime("%H:%M"))
+  expect(@last_email[:html]).to include(@venue_record.venue.name)
+  expect(@last_email[:html]).to include(@venue_record.date.to_s)
+  expect(@last_email[:html]).to include(@venue_record.time.strftime("%H:%M"))
 end
 
 Then (/^the email body should include the equipment name and booking date and time$/) do
-  body = @last_email.html_part&.body&.decoded
-  expect(body).to include(@equipment_record.equipment.name)
-  expect(body).to include(@equipment_record.date.to_s)
-  expect(body).to include(@equipment_record.time.strftime("%H:%M"))
+  expect(@last_email[:html]).to include(@equipment_record.equipment.name)
+  expect(@last_email[:html]).to include(@equipment_record.date.to_s)
+  expect(@last_email[:html]).to include(@equipment_record.time.strftime("%H:%M"))
 end
 
 Then (/^the user should be redirected to the home page$/) do

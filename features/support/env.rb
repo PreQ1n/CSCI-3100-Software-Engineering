@@ -12,6 +12,7 @@ require 'email_spec/cucumber'
 
 Before do
   ActionMailer::Base.deliveries.clear
+  BrevoEmail.deliveries = []
 end
 
 
