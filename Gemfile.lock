@@ -484,6 +484,11 @@ DEPENDENCIES
   brakeman
   bundler-audit
   capybara
+  cucumber
+  cucumber-rails
+  cuprite
+  database_cleaner
+  database_cleaner-active_record
   cucumber-rails
   cuprite
   database_cleaner
@@ -498,6 +503,7 @@ DEPENDENCIES
   rails (~> 8.1.2)
   rails-controller-testing
   rspec
+  rspec-expectations
   rspec-rails
   rubocop-rails-omakase
   selenium-webdriver

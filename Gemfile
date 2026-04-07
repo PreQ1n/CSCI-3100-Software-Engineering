@@ -74,6 +74,10 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
+  gem "cucumber"
+  gem "database_cleaner-active_record"
+  gem 'cucumber-rails', require: false
+  gem 'rspec-expectations'
   gem "rspec"
   gem 'cuprite'
 end
