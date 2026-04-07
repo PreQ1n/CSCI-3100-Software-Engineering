@@ -64,7 +64,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_06_132142) do
     t.string "building"
     t.datetime "created_at", null: false
     t.text "description"
-    t.string "name"
+    t.string "name", null: false
     t.datetime "updated_at", null: false
     t.string "venue_id"
     t.index ["name"], name: "index_venues_on_name"

@@ -67,6 +67,11 @@ group :development, :test do
   gem "factory_bot_rails"
 
   gem "rails-controller-testing"
+
+  gem "simple_calendar"
+
+  gem 'faker'
+
 end
 
 group :development do
@@ -80,12 +85,8 @@ group :test do
   gem "selenium-webdriver"
   gem "cucumber"
   gem "database_cleaner-active_record"
-  gem 'cucumber-rails', require: false
   gem 'rspec-expectations'
   gem "rspec"
   gem "cuprite"
-  gem "cucumber-rails", require: false
-  gem "database_cleaner-active_record"
   gem "email_spec"
-  gem "rspec-rails"
 end

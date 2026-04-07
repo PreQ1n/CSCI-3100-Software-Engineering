@@ -26,4 +26,9 @@ Rails.application.routes.draw do
   get "confirmation", to: "pages#confirmation"
   get "calendar", to: "pages#calendar"
   get "history", to: "pages#history"
+<<<<<<< HEAD
+
+  post 'confirm', to: 'confirmation#confirm'
+=======
+>>>>>>> main
 end

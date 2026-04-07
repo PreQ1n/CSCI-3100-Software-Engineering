@@ -172,6 +172,8 @@ GEM
     factory_bot_rails (6.5.1)
       factory_bot (~> 6.5)
       railties (>= 6.1.0)
+    faker (3.6.1)
+      i18n (>= 1.8.11, < 2)
     ferrum (0.17.2)
       addressable (~> 2.5)
       base64 (~> 0.2)
@@ -418,6 +420,8 @@ GEM
       addressable (~> 2.3, >= 2.3.0)
       json (~> 2.1, >= 2.1.0)
       typhoeus (~> 1.0, >= 1.0.1)
+    simple_calendar (3.1.0)
+      rails (>= 6.1)
     solid_cable (3.0.12)
       actioncable (>= 7.2)
       activejob (>= 7.2)
@@ -512,14 +516,11 @@ DEPENDENCIES
   cuprite
   database_cleaner
   database_cleaner-active_record
-  cucumber-rails
-  cuprite
-  database_cleaner
-  database_cleaner-active_record
   debug
   dotenv-rails
   email_spec
   factory_bot_rails
+  faker
   image_processing (~> 1.2)
   importmap-rails
   jbuilder
@@ -534,6 +535,7 @@ DEPENDENCIES
   rubocop-rails-omakase
   selenium-webdriver
   sib-api-v3-sdk
+  simple_calendar
   solid_cable
   solid_cache
   solid_queue
