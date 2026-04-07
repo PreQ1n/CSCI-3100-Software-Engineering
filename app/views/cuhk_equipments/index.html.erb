@@ -1,0 +1,22 @@
+<p style="color: green"><%= notice %></p>
+
+<% content_for :title, "Cuhk equipment" %>
+
+<h1>Cuhk equipment</h1>
+
+<%= form_with(url: cuhk_equipments_path, method: :get, data:{
+  controller: "search-form", turbo_frame: "cuhk_equipments", turbo_action: "advance"}) do |form| %>
+  <%= form.label :query, "Search by cuhk_equipment", class: "block mb-2 font-medium" %>
+  <%= form.text_field :query, data: { action: "input → search-form#search" } %>
+  <%= form.submit "Search" %>
+<% end %>  
+
+<div class="my-16">
+  <%= render "cuhk_equipments", cuhk_equipments: @cuhk_equipments %>
+</div>
+
+<%= link_to "New cuhk equipment", new_cuhk_equipment_path, class: "px-4 py-4 
+font-medium bg-orange-300 text-neutral-900 rounded
+inline-flex items-center cursor-pointer
+hover:bg-orange-400 focus:ring-4 ring-0
+focus:ring-orange-100" %>

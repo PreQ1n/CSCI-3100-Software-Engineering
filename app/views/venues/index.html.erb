@@ -1,59 +1,34 @@
-<style>
-  table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-  th, td { padding: 12px 20px; text-align: left; border-bottom: 1px solid #eee; }
-  th { background-color: #f8f9fa; font-weight: bold; }
-
-  mark {
-    background-color: #fff3cd;
-    color: #856404;
-    padding: 0 2px;
-    border-radius: 2px;
-    font-weight: bold;
-  }
-</style>
-
 <h1>Venue List - CUHK Venue Booking System</h1>
 
 <div style="margin: 20px 0;">
-  <%= form_with url: venues_path, method: :get, 
-                data: { 
-                  controller: "search", 
+  <%= form_with(url: venues_path, method: :get, 
+                data: {  
                   turbo_frame: "venues_table", 
-                  turbo_action: "advance" 
-                } do |form| %>
+                  turbo_action: "advance",
+                  controller: "search-form" 
+                }) do |form| %>
     
     <div style="display: flex; gap: 10px; align-items: center;">
-      <%= form.text_field :search,
-                         value: params[:search],
-                         placeholder: "Start typing to search venue name...",
+      <%= form.text_field :query,
+                         value: params[:query], # Changed from :search to :query
+                         placeholder: "Start typing to search...",
                          autocomplete: "off",
-                         list: "venue_suggestions",
                          data: { 
-                           action: "input->search#search"
+                          action: "input->search-form#search" # Fixed arrow syntax
                          },
                          style: "width: 300px; padding: 8px;" %>
     
-      <%= form.button type: :submit, style: "padding: 8px 20px; display: flex; align-items: center; gap: 8px; cursor: pointer; background-color: #f0f0f0; border: 1px solid #ccc; border-radius: 4px;" do %>
+      <%= form.button type: :submit, style: "padding: 8px 20px; ..." do %>
         <i class="bi bi-search"></i> Search
       <% end %>      
 
-      <%= link_to venues_path, style: "margin-left: 10px; color: #666; text-decoration: none; display: flex; align-items: center; gap: 5px;" do %>
-        <i class="bi bi-arrow-counterclockwise"></i> Clear
-      <% end %>
+      <%= link_to "Clear", venues_path, style: "..." %>
     </div>
   <% end %>
 </div>
 
-<datalist id="venue_suggestions">
-  <% Venue.order(:name).each do |venue| %>
-    <option value="<%= venue.name %>">
-  <% end %>
-</datalist>
-
-
-
-
-<%= render "venues_table", venues: @venues %>
+<%# Only render the partial here. Ensure the turbo_frame_tag is INSIDE the partial %>
+<%= render "venues_table", venues_table: @venues_table %>
 
 <br>
 <%= link_to "Add New Venue", new_venue_path, data: { turbo: false } %>

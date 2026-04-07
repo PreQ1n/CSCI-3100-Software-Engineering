@@ -1,33 +1,34 @@
 <%= turbo_frame_tag "venues_table" do %>
-    <table>
-      <thead>
-        <tr>
-          <th>Venue Name</th>
-          <th>Building</th>
-          <th>Description</th>
-          <th colspan="3">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% if venues.any? %>
-          <% venues.each do |venue| %>
-            <tr>
-              <td><%= highlight(venue.name, params[:search]) %></td>
-              <td><%= highlight(venue.building, params[:search]) %></td>
-              <td><%= highlight(venue.description, params[:search]) %></td>
-              
-              <td><%= link_to "Show", venue, data: { turbo: false } %></td>
-              <td><%= link_to "Edit", edit_venue_path(venue), data: { turbo: false } %></td>
-              <td><%= link_to "Delete", venue, method: :delete, data: { confirm: "Are you sure?", turbo: false } %></td>
-            </tr>
-          <% end %>
-        <% else %>
+  <table>
+    <thead>
+      <tr>
+        <th>Venue Name</th>
+        <th>Building</th>
+        <th>Description</th>
+        <th colspan="3">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if venues_table.any? %>
+        <% venues_table.each do |venue| %>
           <tr>
-            <td colspan="6" style="text-align: center; padding: 20px; color: #999;">
-              No venues found matching "<%= params[:search] %>"
-            </td>
+            <%# We use params[:query] here to match the form input %>
+            <td><%= highlight(venue.name, params[:query]) %></td>
+            <td><%= highlight(venue.building, params[:query]) %></td>
+            <td><%= highlight(venue.description, params[:query]) %></td>
+            
+            <td><%= link_to "Show", venue, data: { turbo: false } %></td>
+            <td><%= link_to "Edit", edit_venue_path(venue), data: { turbo: false } %></td>
+            <td><%= link_to "Delete", venue, data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %></td>
           </tr>
         <% end %>
-      </tbody>
-    </table>
+      <% else %>
+        <tr>
+          <td colspan="6" style="text-align: center; padding: 20px; color: #999;">
+            No venues found matching "<%= params[:query] %>"
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
 <% end %>

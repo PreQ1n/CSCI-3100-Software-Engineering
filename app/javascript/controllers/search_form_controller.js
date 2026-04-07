@@ -1,16 +1,12 @@
 import { Controller } from "@hotwired/stimulus"
 
+// Connects to data-controller="search-form"
 export default class extends Controller {
-
-  connect() {
-    console.log("Search controller connected!")
-  }
-  
   search() {
-    console.log('Test!')
+    console.log("Test!")
     clearTimeout(this.timeout)
     this.timeout = setTimeout(() => {
       this.element.requestSubmit();
-    }, 200)
+    }, 300)
   }
 }

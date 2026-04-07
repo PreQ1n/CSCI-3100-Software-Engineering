@@ -4,14 +4,11 @@
 
 import { application } from "controllers/application"
 
-import { eagerLoadControllersFrom } from "@hotwired/stimulus-loading"
-eagerLoadControllersFrom("controllers", application)
-
-import HelloController from "./hello_controller"
+import HelloController from "controllers/hello_controller"
 application.register("hello", HelloController)
 
-import SearchController from "./search_controller"
-application.register("search", SearchController)
+import SearchFormController from "controllers/search_form_controller"
+application.register("search-form", SearchFormController)
 
-import SlimController from "./slim_controller"
-application.register("slim", SlimController)
+import SearchController from "controllers/search_controller"
+application.register("search", SearchController)

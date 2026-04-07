@@ -1,0 +1,2 @@
+module CuhkEquipmentsHelper
+end
