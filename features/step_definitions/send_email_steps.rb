@@ -10,14 +10,14 @@ Given(/^the following users exist:$/) do |table|
   end
 end
 
-Given(/^the following venues exist:$/) do |table|
-  table.hashes.each do |row|
-    Venue.create!(
-      name:     row["name"],
-      building: row["building"]
-    )
-  end
-end
+# Given(/^the following venues exist:$/) do |table|
+#   table.hashes.each do |row|
+#     Venue.create!(
+#       name:     row["name"],
+#       building: row["building"]
+#     )
+#   end
+# end
 
 Given(/^the following equipment exist:$/) do |table|
   table.hashes.each do |row|
