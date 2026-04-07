@@ -1,3 +1,18 @@
+<style>
+  table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+  th, td { padding: 12px 20px; text-align: left; border-bottom: 1px solid #eee; }
+  th { background-color: #f8f9fa; font-weight: bold; }
+
+  mark {
+    background-color: #fff3cd;
+    color: #856404;
+    padding: 0 2px;
+    border-radius: 2px;
+    font-weight: bold;
+  }
+</style>
+
+
 <h1>Venue List - CUHK Venue Booking System</h1>
 
 <div style="margin: 20px 0;">
@@ -10,24 +25,24 @@
     
     <div style="display: flex; gap: 10px; align-items: center;">
       <%= form.text_field :query,
-                         value: params[:query], # Changed from :search to :query
+                         value: params[:query],
                          placeholder: "Start typing to search...",
                          autocomplete: "off",
                          data: { 
-                          action: "input->search-form#search" # Fixed arrow syntax
+                          action: "input->search-form#search" 
                          },
                          style: "width: 300px; padding: 8px;" %>
     
       <%= form.button type: :submit, style: "padding: 8px 20px; ..." do %>
         <i class="bi bi-search"></i> Search
       <% end %>      
-
-      <%= link_to "Clear", venues_path, style: "..." %>
+      <%= link_to venues_path, style: "margin-left: 10px; color: #666; text-decoration: none; display: flex; align-items: center; gap: 5px;" do %>
+      <i class="bi bi-arrow-counterclockwise"></i> Clear
+      <% end %> 
     </div>
   <% end %>
 </div>
 
-<%# Only render the partial here. Ensure the turbo_frame_tag is INSIDE the partial %>
 <%= render "venues_table", venues_table: @venues_table %>
 
 <br>

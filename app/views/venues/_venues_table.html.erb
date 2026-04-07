@@ -12,7 +12,6 @@
       <% if venues_table.any? %>
         <% venues_table.each do |venue| %>
           <tr>
-            <%# We use params[:query] here to match the form input %>
             <td><%= highlight(venue.name, params[:query]) %></td>
             <td><%= highlight(venue.building, params[:query]) %></td>
             <td><%= highlight(venue.description, params[:query]) %></td>
@@ -25,7 +24,7 @@
       <% else %>
         <tr>
           <td colspan="6" style="text-align: center; padding: 20px; color: #999;">
-            No venues found matching "<%= params[:query] %>"
+            No venues name found matching "<%= params[:query] %>"
           </td>
         </tr>
       <% end %>

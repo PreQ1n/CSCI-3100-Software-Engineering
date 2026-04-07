@@ -9,10 +9,12 @@ class CuhkEquipmentsController < ApplicationController
     else
       @cuhk_equipments = CuhkEquipment.all.order(:name)
     end
-
+  
     if turbo_frame_request?
-      render partial: "cuhk_equipments", locals: { cuhk_equipments: @cuhk_equipments}
+      # This renders JUST the table part for the live search
+      render partial: "cuhk_equipments", locals: { cuhk_equipments: @cuhk_equipments }
     else
+      # This renders the full page on initial load
       render :index
     end  
   end
