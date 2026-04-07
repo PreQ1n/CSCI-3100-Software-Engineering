@@ -25,6 +25,10 @@ Capybara.javascript_driver = :selenium_chrome_headless
 require 'capybara/cuprite'
 Capybara.register_driver :cuprite do |app|
 Capybara::Cuprite::Driver.new(
+require 'capybara/cuprite'
+
+Capybara.register_driver :cuprite do |app|
+  Capybara::Cuprite::Driver.new(
     app,
     window_size: [1200, 800],
     timeout: 10,

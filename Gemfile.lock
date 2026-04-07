@@ -489,6 +489,9 @@ DEPENDENCIES
   cuprite
   database_cleaner
   database_cleaner-active_record
+  cucumber-rails
+  cuprite
+  database_cleaner
   debug
   factory_bot_rails
   image_processing (~> 1.2)
