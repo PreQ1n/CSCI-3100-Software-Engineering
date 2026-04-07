@@ -1,0 +1,3 @@
+BookingMailer#equipment_booking_cancelled
+
+Hi, find me in app/views/booking_mailer/equipment_booking_cancelled

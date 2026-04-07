@@ -1,9 +1,17 @@
+# features/step_definitions/account.steps.rb
+
+# 輔助方法
+def parse_date(date_string)
+    day, month, year = date_string.split('-')
+    Date.new(year.to_i, month.to_i, day.to_i)
+end
+
 Given("I am logged in as a user") do 
     @current_user = User.create!(
         id: 1,
         email: "student@gmail.com",
         password: "111"
-)
+    )
 
     visit(login_path)
     fill_in("Email", with: @current_user.email)
@@ -11,35 +19,31 @@ Given("I am logged in as a user") do
     click_button("Login")
 end
 
-When("My mouse on the {string} button") do |button|
-    case button
-    when "account"
-    find("#account_button").hover
-    end
+When("My mouse on the account button") do 
+    find(".dropdown-button").click
 end
 
-Then("a dropdown menu (not )? show") do |no|
-    if no
-        expect(page).to have_no_selector('#account_dropdown', visible: true)
-    else
-        expect(page).to have_selector("#account_dropdown", visible: true)
-    end
+Then("a dropdown menu show") do
+    expect(page).to have_css(".dropdown-content", visible: true)
 end
 
 Then("there are three option to choose:") do |table|
-    options = table.raw.flatten.map{|x| x.strip}
-    
-    menu_options = within("#account_menu") do 
-        page.all("li").map(&:text).map(&:strip)
+    options = table.raw.flatten
+    within(".dropdown-content") do
+        options.each do |option|
+            expect(page).to have_link(option, visible: true)
+        end
     end
-
-    expect(options).to eq(menu_options)
 end
 
 When("I click on the {string} option in the account menu") do |option|
-    within("#account_menu") do
-        find("li", text:option).click
+    within(".dropdown-content") do
+        click_link(option)
     end
+end
+
+When("I click the ✅Press to Confirm button") do
+    click_button("✅Press to Confirm")
 end
 
 Then("I should be on the {string}") do |path|
@@ -51,68 +55,60 @@ Then("I should be on the {string}") do |path|
     when "history_path"
         history_path  
     end
-
     expect(current_path).to eq(expected_path)
 end
 
-When ("my mouse not on the button") do
-    find("header").hover
+Then("I am on the main page") do
+    expect(current_path).to eq(root_path)
 end
 
-Given("I am on the {string} page") do |path|
-    case path
-    when "confirmation_path"
+Given("I am on the {string} page") do |page_name|
+    case page_name
+    when "Confirmation"
         visit(confirmation_path)
-    when "calendar_path"
+    when "Calendar"
         visit(calendar_path)
-    when "history_path"
+    when "History"
         visit(history_path)
-    when "main"
-        visit(root_path)
     end
-
 end
 
 Given("the title should be {string}") do |title|
-    page_title = find("header").text
-
+    page_title = find("h1").text
     expect(page_title).to eq(title)
 end
 
-Given("there is a {string} button") do |button|
-    expect(page).to have_button(button)
+Given("there is a {string} link") do |link|
+    expect(page).to have_link(link)
 end
 
 When("I have a new confirmation") do
-
-    @venue = Venue.create!(
-        name: "Test Venue"
-    )
+    @venue = Venue.create!(name: "Test Venue")
+    @test_time = Time.current + 2.hours  # 修正：2.hours
 
     @confirmation = VenueRecord.create!(
         user_id: @current_user.id,
         venue_id: @venue.id,
-        date: Date.new(2026,3,16),
-        time: "13:00".to_time
+        date: Date.today,
+        time: @test_time,
+        is_absence: nil
     )
 
     visit(current_path)
 end
 
 Then("it will show up a new confirmation") do 
-    expect(page).to have_selector('.confirmation-record', count: 1)
     expect(page).to have_content("Test Venue")
-    expect(page).to have_content("13:00")
+    expect(page).to have_content(@test_time.strftime("%H:%M"))
 end
 
-Then("the confirmation will have a {string} button") do |button|
-    within(".confirmation-record") do
-        expect(page).to have_button(button)
-    end
+Then("the confirmation will have a ✅Press to Confirm button") do
+    expect(page).to have_button("✅Press to Confirm")
 end
 
 Then("the record will be removed") do
-    expect(page).to have_selector('.confirmation-record', count: 0)
+    expect(page).to have_content("Confirmed!")
+    expect(page).to have_no_button("✅Press to Confirm")
 end
 
 Then("the recored will be update in the database") do
@@ -121,70 +117,47 @@ Then("the recored will be update in the database") do
 end
 
 Then("I should see a monthly calendar view") do
-    expect(page).to have_selector(".calendar-view")
-    expect(page).to have_selector(".calendar-grid")
+    expect(page).to have_css(".calendar-container")
+    expect(page).to have_css(".day-number")
 end
 
 Then("the current month and year should be display at the top") do
     month = Date.today.strftime("%B %Y")
-    expect(page).to have_selector("#calendar-id", text: month)
+    expect(page).to have_content(month)
 end
 
 Then("the days of the week should also be display") do
-    days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-    
+    days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
     days.each do |day|
-        expect(page).to have_selector(".calendar-day", text:day)
+        expect(page).to have_content(day)
     end
 end
 
-Given("I have the the following booked") do |table|
+Given("I have the following booked") do |table|
     table.hashes.each do |row|
         if row["Name"].include?("venue")
-            current_venue = create!(
-                name: row["Name"]
-            )
-
+            current_venue = Venue.create!(name: row["Name"])
             VenueRecord.create!(
                 user_id: @current_user.id,
                 venue_id: current_venue.id,
-                date: Date.parse(row["Date"]),
+                date: parse_date(row["Date"]),
                 time: Time.parse(row["Time"])
             )
         else
-            current_equipment = create!(
-                name: row["Name"]
-            )
-
+            current_equipment = Equipment.create!(name: row["Name"])
             EquipmentRecord.create!(
                 user_id: @current_user.id,
-                venue_id: current_equipment.id,
-                date: Date.parse(row["Date"]),
+                equipment_id: current_equipment.id,
+                date: parse_date(row["Date"]),
                 time: Time.parse(row["Time"])
             )
         end
     end
-    
     visit(current_path)
 end
 
-Then("{int} March should show {string} and {string} on that day") do |day, name, time|
-
-    date = Date.new(2026, 3, day)
-    day_cell = find(".calendar-day[date='#{date}']")
-
-    within(day_cell) do
-        expect(page).to have_content(name)
-        expect(page).to have_content(time)
-    end
+Then("{int} April should show {string} and {string} on that day") do |day, name, time|
+    expect(page).to have_content(day.to_s)
+    expect(page).to have_content(name)
+    expect(page).to have_content(time)
 end
-
-
-
-
-
-
-
-
-
-

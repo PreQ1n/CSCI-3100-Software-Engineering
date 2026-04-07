@@ -1,0 +1,10 @@
+<h2>Booking Confirmed</h2>
+<p>Dear <%= user.email %>,</p>
+<p>Your equipment booking has been confirmed.</p>
+<p>Here are your booking details:</p>
+<ul>
+  <li><strong>Equipment:</strong> <%= equipment_record.equipment.name %></li>
+  <li><strong>Date:</strong> <%= equipment_record.date %></li>
+  <li><strong>Time:</strong> <%= equipment_record.time.strftime("%H:%M") %></li>
+</ul>
+<p>Thank you for your booking.</p>

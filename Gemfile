@@ -23,6 +23,9 @@ gem "bcrypt", "~> 3.1.7"
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 
+# Mail API
+gem "sib-api-v3-sdk"
+
 # Use the database-backed adapters for Rails.cache, Active Job, and Action Cable
 gem "solid_cache"
 gem "solid_queue"
@@ -39,6 +42,8 @@ gem "thruster", require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 gem "image_processing", "~> 1.2"
+
+gem "dotenv-rails", groups: [ :development, :test ]
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -79,6 +84,10 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
+  gem "cucumber"
+  gem "database_cleaner-active_record"
+  gem 'rspec-expectations'
   gem "rspec"
-  gem 'cuprite'
+  gem "cuprite"
+  gem "email_spec"
 end
