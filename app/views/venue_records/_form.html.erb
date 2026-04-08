@@ -1,0 +1,17 @@
+<%= form_with(model: venue_record) do |form| %>
+  <% if venue_record.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(venue_record.errors.count, "error") %> prohibited this venue_record from being saved:</h2>
+
+      <ul>
+        <% venue_record.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

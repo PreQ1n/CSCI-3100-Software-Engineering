@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :equipment_records
+  resources :venue_records
   root "pages#hello"
   resources :venues
   resources :cuhk_equipments
@@ -7,6 +9,8 @@ Rails.application.routes.draw do
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "/venues", to: "venues#index"
+  get "/booking_venue", to: "venue_records#index"
+  get "/booking_equipment", to: "equipment_records#index"
   get "/cuhk_equipments", to: "cuhk_equipments#index"
   # get "/eqyipment"
   # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
@@ -26,9 +30,6 @@ Rails.application.routes.draw do
   get "confirmation", to: "pages#confirmation"
   get "calendar", to: "pages#calendar"
   get "history", to: "pages#history"
-<<<<<<< HEAD
 
   post 'confirm', to: 'confirmation#confirm'
-=======
->>>>>>> main
 end
