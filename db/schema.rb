@@ -30,6 +30,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_06_132142) do
     t.date "date"
     t.integer "equipment_id", null: false
     t.boolean "is_absence"
+    t.boolean "is_returnLate"
     t.time "time"
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
@@ -38,6 +39,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_06_132142) do
   end
 
   create_table "users", force: :cascade do |t|
+    t.boolean "admin", default: false
     t.string "college", default: "Undeclared"
     t.datetime "created_at", null: false
     t.string "email", null: false
