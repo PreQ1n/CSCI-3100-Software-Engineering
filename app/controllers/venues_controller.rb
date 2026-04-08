@@ -3,19 +3,16 @@ class VenuesController < ApplicationController
 
   # GET /venues or /venues.json
   def index
-    @search = params[:search]&.strip
-  
-    if @search.present?
-      @venues = Venue.where(
-        "name LIKE :search OR 
-         building LIKE :search OR 
-         description LIKE :search",
-        search: "%#{@search}%"
-      )
+    if params[:query].present?
+      @venues_table = Venue.where("name LIKE ? OR building LIKE ?", "%#{params[:query]}%", "%#{params[:query]}%")
     else
-      @venues = Venue.all
+      @venues_table = Venue.all
     end
-    @venues = @venues.order(:name)
+
+    # Respond to the turbo_frame request
+    respond_to do |format|
+      format.html # renders index.html.erb
+    end
   end
 
   # GET /venues/1 or /venues/1.json

@@ -1,0 +1,26 @@
+<h1 style="text-align: center; margin: 20px 0;">Calendar</h1>
+
+
+<div class="calendar-container">
+<%= month_calendar(events: @bookings_date, 
+                   start_attribute: :start_time) do |date, bookings| %>
+
+  <div class="day-number">
+    <%= date.day %>
+  </div>
+
+  <% if bookings.present? %>
+    <% bookings.each do |booking| %>
+      <div class="booking-record">
+
+        <div class="booking-equipment"><%= booking.equipment%></div>
+        <div class="booking-venue"><%= booking.venue%></div>
+        
+        <div class="booking-time">
+          <%= booking.time.strftime("%H:%M")%>
+        </div>
+
+      </div>
+    <% end %>
+  <% end %>
+<% end %>

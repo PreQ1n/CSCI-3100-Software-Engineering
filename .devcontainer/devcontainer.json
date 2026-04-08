@@ -1,0 +1,6 @@
+{  
+    "name": "software-engineering-project",
+    "image": "ruby:3.3-slim",
+    "postCreateCommand": "apt-get update && apt-get install -y build-essential libyaml-dev git nodejs sqlite3 libsqlite3-dev && gem install rails -v '8.1' && ruby --version && git --version && rails --version",
+    "forwardPorts": [3000]
+}
