@@ -1,0 +1,334 @@
+<div class="analytics-dashboard">
+  <h1>Analytics Dashboard</h1>
+  <p class="date-range">Period: <%= @start_date.strftime("%B %d, %Y") %> to <%= @end_date.strftime("%B %d, %Y") %></p>
+
+  <!-- Overall Metrics Section -->
+  <section class="overall-metrics">
+    <h2>Overall Metrics</h2>
+    <div class="metrics-container">
+      <div class="metric-card">
+        <h3>Absence Rate</h3>
+        <p class="metric-value"><%= @absence_rate %>%</p>
+      </div>
+      <div class="metric-card">
+        <h3>Late Return Rate</h3>
+        <p class="metric-value"><%= @late_return_rate %>%</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Top Venues Section -->
+  <section class="top-venues">
+    <h2>Top Venues by Booking Count</h2>
+    <div class="ranking-container">
+      <table class="ranking-table">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Venue Name</th>
+            <th>Booking Count</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @top_venues.each_with_index do |(venue_name, count), index| %>
+            <tr>
+              <td><%= index + 1 %></td>
+              <td><%= venue_name %></td>
+              <td><%= count %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Top Equipment Section -->
+  <section class="top-equipment">
+    <h2>Top Equipment by Booking Count</h2>
+    <div class="ranking-container">
+      <table class="ranking-table">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Equipment Name</th>
+            <th>Booking Count</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @top_equipment.each_with_index do |(equipment_name, count), index| %>
+            <tr>
+              <td><%= index + 1 %></td>
+              <td><%= equipment_name %></td>
+              <td><%= count %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Faculty Distribution Section -->
+  <section class="faculty-distribution">
+    <h2>Faculty Booking Distribution</h2>
+    <div class="distribution-container">
+      <table class="distribution-table">
+        <thead>
+          <tr>
+            <th>Faculty</th>
+            <th>Booking Count</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @faculty_distribution.each do |faculty, count| %>
+            <tr>
+              <td><%= faculty %></td>
+              <td><%= count %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- College Distribution Section -->
+  <section class="college-distribution">
+    <h2>College Booking Distribution</h2>
+    <div class="distribution-container">
+      <table class="distribution-table">
+        <thead>
+          <tr>
+            <th>College</th>
+            <th>Booking Count</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @college_distribution.each do |college, count| %>
+            <tr>
+              <td><%= college %></td>
+              <td><%= count %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Major Distribution Section -->
+  <section class="major-distribution">
+    <h2>Top 5 Majors by Booking Count</h2>
+    <div class="distribution-container">
+      <table class="distribution-table">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Major</th>
+            <th>Booking Count</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @major_distribution.each_with_index do |(major, count), index| %>
+            <tr>
+              <td><%= index + 1 %></td>
+              <td><%= major %></td>
+              <td><%= count %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- User Booking Frequency Section -->
+  <section class="user-frequency">
+    <h2>Booking Frequency Per User</h2>
+    <div class="frequency-container">
+      <div class="frequency-card">
+        <h3>Repeat Users (2+ bookings)</h3>
+        <p class="frequency-value"><%= @user_booking_frequency[:repeat_users_count] %></p>
+      </div>
+      <div class="frequency-card">
+        <h3>One-Time Users</h3>
+        <p class="frequency-value"><%= @user_booking_frequency[:one_time_users_count] %></p>
+      </div>
+      <div class="frequency-card">
+        <h3>Total Active Users</h3>
+        <p class="frequency-value"><%= @user_booking_frequency[:total_users] %></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Venue Utilization Section -->
+  <section class="venue-utilization">
+    <h2>Resource Utilization Per Venue</h2>
+    <div class="utilization-container">
+      <table class="utilization-table">
+        <thead>
+          <tr>
+            <th>Venue Name</th>
+            <th>Bookings</th>
+            <th>Utilization Rate</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @venue_utilization.each do |venue| %>
+            <tr>
+              <td><%= venue[:name] %></td>
+              <td><%= venue[:bookings] %></td>
+              <td>
+                <div class="utilization-bar">
+                  <div class="utilization-fill" style="width: <%= venue[:utilization_rate] %>%"></div>
+                  <span class="utilization-text"><%= venue[:utilization_rate] %>%</span>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Average Bookings Per Day Section -->
+  <section class="avg-bookings">
+    <h2>Average Bookings Per Day</h2>
+    <div class="metrics-container">
+      <div class="metric-card">
+        <h3>Daily Average</h3>
+        <p class="metric-value"><%= @avg_bookings_per_day %></p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<style>
+  .analytics-dashboard {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 10px;
+  }
+
+  .date-range {
+    text-align: center;
+    color: #666;
+    margin-bottom: 30px;
+  }
+
+  h2 {
+    color: #444;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 10px;
+    margin-top: 30px;
+    margin-bottom: 20px;
+  }
+
+  .metrics-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+
+  .metric-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+
+  .metric-card h3 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    opacity: 0.9;
+  }
+
+  .metric-value {
+    margin: 10px 0 0 0;
+    font-size: 32px;
+    font-weight: bold;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  th {
+    background-color: #f8f9fa;
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+    color: #333;
+    border-bottom: 2px solid #dee2e6;
+  }
+
+  td {
+    padding: 12px;
+    border-bottom: 1px solid #dee2e6;
+  }
+
+  tr:hover {
+    background-color: #f8f9fa;
+  }
+
+  section {
+    margin-bottom: 40px;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+
+  .frequency-card {
+    background: linear-gradient(135deg, #00d4ff 0%, #0066ff 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+
+  .frequency-value {
+    margin: 10px 0 0 0;
+    font-size: 32px;
+    font-weight: bold;
+  }
+
+  .utilization-bar {
+    position: relative;
+    background: #e9ecef;
+    border-radius: 4px;
+    height: 24px;
+    overflow: hidden;
+  }
+
+  .utilization-fill {
+    background: linear-gradient(90deg, #28a745, #20c997);
+    height: 100%;
+    display: flex;
+    align-items: center;
+    transition: width 0.3s ease;
+  }
+
+  .utilization-text {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-weight: 600;
+    color: #333;
+    font-size: 12px;
+  }
+</style>

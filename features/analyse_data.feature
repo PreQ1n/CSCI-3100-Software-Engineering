@@ -79,19 +79,25 @@ Background:
     | 6       | 2            | 2026-03-05 | 10:00 | false      | false         |
     | 7       | 1            | 2026-03-05 | 11:00 | true       | false         |  
 
-Scenario: Overall usage rate is correctly displayed (Period: 2026-03-01 to 2026-03-05)
+Scenario: Booking frequency per user is shown
   Given I am logged in as an administrator
   When I visit the analytics dashboard
-  Then I should see "Overall Usage Rate"
-  And the overall usage rate should be displayed as "11.4%"
+  Then I should see a breakdown of user booking frequency
+  And I should see users categorized as "Repeat Users" or "One-Time Users"
+  And the repeat users count should be at least "1"
 
-Scenario: Weekly peak hours are correctly shown
+Scenario: Resource utilization per venue is shown
   Given I am logged in as an administrator
   When I visit the analytics dashboard
-  Then I should see a chart labeled "Peak Hours (Weekly)"
-  And the hour "10:00" should be among the top 3 peak hours
-  And the hour "11:00" should be among the top 3 peak hours
-  And the hour "15:00" should be among the top 3 peak hours
+  Then I should see a list of venues with their utilization rates
+  And "LSB LT1" should have the highest utilization rate
+  And each venue should display a utilization percentage
+
+Scenario: Average bookings per day is correctly displayed
+  Given I am logged in as an administrator
+  When I visit the analytics dashboard
+  Then I should see "Average Bookings Per Day"
+  And the average bookings per day should be displayed as "7.4"
 
 Scenario: Popular venues and equipment are correctly ranked
   Given I am logged in as an administrator

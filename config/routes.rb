@@ -23,12 +23,10 @@ Rails.application.routes.draw do
   post "login", to: "sessions#create"
   delete "logout", to: "sessions#destroy"
 
-  get "confirmation", to: "pages#confirmation"
-  get "calendar", to: "pages#calendar"
-  get "history", to: "pages#history"
-<<<<<<< HEAD
+  get 'confirmation', to: 'pages#confirmation'
+  get 'calendar', to: 'pages#calendar'
+  get 'history', to: 'pages#history'
+  get 'analytics_dashboard', to: 'pages#analytics_dashboard'
 
   post 'confirm', to: 'confirmation#confirm'
-=======
->>>>>>> main
 end
