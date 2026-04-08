@@ -1,0 +1,12 @@
+<% content_for :title, "Editing venue record" %>
+
+<h1>Editing venue record</h1>
+
+<%= render "form", venue_record: @venue_record %>
+
+<br>
+
+<div>
+  <%= link_to "Show this venue record", @venue_record %> |
+  <%= link_to "Back to venue records", venue_records_path %>
+</div>

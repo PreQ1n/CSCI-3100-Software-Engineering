@@ -1,0 +1,12 @@
+<% content_for :title, "Editing equipment record" %>
+
+<h1>Editing equipment record</h1>
+
+<%= render "form", equipment_record: @equipment_record %>
+
+<br>
+
+<div>
+  <%= link_to "Show this equipment record", @equipment_record %> |
+  <%= link_to "Back to equipment records", equipment_records_path %>
+</div>
