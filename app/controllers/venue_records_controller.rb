@@ -12,7 +12,12 @@ class VenueRecordsController < ApplicationController
 
   # GET /venue_records/new
   def new
-    @venue_record = VenueRecord.new
+    # render json: params and return
+    if !logged_in?
+      user_authentication
+      return
+    end
+    @venue_record = VenueRecord.new(venue_id: params[:venue_id])
   end
 
   # GET /venue_records/1/edit
@@ -22,6 +27,10 @@ class VenueRecordsController < ApplicationController
   # POST /venue_records or /venue_records.json
   def create
     @venue_record = VenueRecord.new(venue_record_params)
+    @venue_record.user_id = current_user.id
+    @venue_record.venue_id = 1
+    puts "venue id:"
+    puts params[:venue_id]
 
     respond_to do |format|
       if @venue_record.save
@@ -66,5 +75,6 @@ class VenueRecordsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def venue_record_params
       params.fetch(:venue_record, {})
+      params.require(:venue_record).permit(:user_id, :venue_id, :date, :time)
     end
 end
