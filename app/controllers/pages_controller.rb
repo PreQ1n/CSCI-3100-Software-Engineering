@@ -40,6 +40,14 @@ class PagesController < ApplicationController
   end
 
   def history
+    @user = current_user  # Assuming current_user is defined in ApplicationController
+    @record_type = params[:type] || 'venue'  # Default to venue; toggle via buttons
+    
+    if @record_type == 'equipment'
+      @records = @user.equipment_records.includes(:equipment).order(date: :desc, time: :desc)
+    else
+      @records = @user.venue_records.includes(:venue).order(date: :desc, time: :desc)
+    end
   end
 
   def analytics_dashboard

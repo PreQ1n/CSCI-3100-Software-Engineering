@@ -1,0 +1,20 @@
+.history-title {
+  font-family: 'Arial', sans-serif;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #007bff;  /* Blue color */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);  /* Subtle shadow */
+  border-bottom: 3px solid #007bff;  /* Underline */
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.table th, .table td {
+  vertical-align: middle;  /* Center content vertically */
+}
+
+.alert-info {
+  background-color: #d1ecf1;
+  border-color: #bee5eb;
+  color: #0c5460;
+}
