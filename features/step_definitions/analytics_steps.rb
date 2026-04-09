@@ -1,10 +1,10 @@
-Given("the following venues exist:") do |table|
+Given("the following analytics venues exist:") do |table|
   table.hashes.each do |row|
     Venue.create!(id: row["id"].to_i, name: row["name"])
   end
 end
 
-Given("the following equipment exist:") do |table|
+Given("the following analytics equipment exist:") do |table|
   table.hashes.each do |row|
     Equipment.create!(
       id: row["id"].to_i,
@@ -14,7 +14,7 @@ Given("the following equipment exist:") do |table|
   end
 end
 
-Given("the following users exist:") do |table|
+Given("the following analytics users exist:") do |table|
   table.hashes.each do |row|
     User.create!(
       id: row["id"].to_i,
@@ -28,7 +28,7 @@ Given("the following users exist:") do |table|
   end
 end
 
-Given("the following venue_records exist:") do |table|
+Given("the following analytics venue_records exist:") do |table|
   table.hashes.each do |row|
     VenueRecord.create!(
       user_id: row["user_id"].to_i,
@@ -40,7 +40,7 @@ Given("the following venue_records exist:") do |table|
   end
 end
 
-Given("the following equipment_records exist:") do |table|
+Given("the following analytics equipment_records exist:") do |table|
   table.hashes.each do |row|
     EquipmentRecord.create!(
       user_id: row["user_id"].to_i,
@@ -104,7 +104,7 @@ Then("each venue should display a utilization percentage") do
   end
 end
 
-Then("I should see {string}") do |text|
+Then("I should see analytics text {string}") do |text|
   expect(page).to have_content(text)
 end
 
