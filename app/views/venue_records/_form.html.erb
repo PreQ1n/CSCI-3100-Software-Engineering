@@ -11,8 +11,7 @@
     </div>
   <% end %>
   
-  <%= form.label :venue_id, style: "display: block" %>
-  <%= form.text_field :venue_id %>
+  <%= form.hidden_field :venue_id, value: params[:venue_id] %>
 
   <div>
     <%= form.label :date, style: "display: block" %>
