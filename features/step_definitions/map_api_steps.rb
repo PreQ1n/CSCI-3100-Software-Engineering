@@ -22,7 +22,7 @@ Given('the following venue_records exists:') do |table|
             is_absence: "true",
             time: row["time"],
             user: User.find_by!(id: row["user_id"]),
-            venue: Venue.find_by!(id: row["venue_id"])
+            venue: Venue.find_by!(venue_id: row["venue_id"])
         )
     end
 end
