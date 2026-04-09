@@ -16,7 +16,7 @@
             <td><%= highlight(venue.building, params[:query]) %></td>
             <td><%= highlight(venue.description, params[:query]) %></td>
             
-            <td><%= link_to "Show", venue, data: { turbo: false } %></td>
+            <td><%= link_to "Book", new_venue_record_path(venue_id: venue.venue_id), data: { turbo: false } %></td>
             <td><%= link_to "Edit", edit_venue_path(venue), data: { turbo: false } %></td>
             <td><%= link_to "Delete", venue, data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %></td>
           </tr>

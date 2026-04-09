@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_06_132142) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_09_052709) do
   create_table "cuhk_equipments", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "description"
@@ -70,7 +70,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_06_132142) do
     t.decimal "longitude", precision: 10, scale: 6
     t.string "name"
     t.datetime "updated_at", null: false
-    t.string "venue_id"
+    t.integer "venue_id"
     t.index ["name"], name: "index_venues_on_name"
     t.index ["venue_id"], name: "index_venues_on_venue_id", unique: true
   end
