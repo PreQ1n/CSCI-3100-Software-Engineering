@@ -19,4 +19,11 @@ class ApplicationController < ActionController::Base
       redirect_to login_path, alert: "Please first Log in"
     end
   end
+
+  def admin_authentication
+    if !current_user&.admin?
+      redirect_to root_path, alert: "Access denied."
+    end
+  end
+  
 end

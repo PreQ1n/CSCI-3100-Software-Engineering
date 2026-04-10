@@ -91,33 +91,6 @@ RSpec.describe PagesController, type: :controller do
 
         end
 
-        context "range of date" do 
-            it "beginning_of_month" do
-                get :calendar, params: {date: "2026-04-01" }
-                expect(assigns(:date).beginning_of_month).to eq(Date.new(2026, 4, 1))
-            end
-
-            it "end_of_month" do
-                get :calendar, params: {date: "2026-04-01" }
-                expect(assigns(:date).end_of_month).to eq(Date.new(2026, 4, 30))
-            end
-        end
-
-        context "booking records" do
-            let(:start_date) { Date.current.beginning_of_month }
-            let(:end_date) { Date.current.end_of_month }
-
-            it "VenueRecord query within the range" do
-                expect(VenueRecord).to receive(:where).with(date: start_date..end_date).and_call_original
-                get :calendar
-            end
-
-            it "EquipmentRecord query within the range" do
-                expect(EquipmentRecord).to receive(:where).with(date: start_date..end_date).and_call_original
-                get :calendar
-            end
-        end
-
         context "bookings_date construct" do
             let!(:venue_record) do
                 create(:venue_record, 

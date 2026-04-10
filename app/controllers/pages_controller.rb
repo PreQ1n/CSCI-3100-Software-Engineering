@@ -14,15 +14,13 @@ class PagesController < ApplicationController
   end
 
   def calendar
+    @user = current_user
 
     @date = params[:date] ? Date.parse(params[:date]) : Date.current
     
-    start_date = @date.beginning_of_month
-    end_date = @date.end_of_month
+    venue_bookings = VenueRecord.where(user_id: current_user.id).includes(:venue)
     
-    venue_bookings = VenueRecord.where(date: start_date..end_date).includes(:venue)
-    
-    equipment_bookings = EquipmentRecord.where(date: start_date..end_date).includes(:equipment)
+    equipment_bookings = EquipmentRecord.where(user_id: current_user.id).includes(:equipment)
     
     #simple_calendar gem require a start_time variable, so make a new struct to pass 
     #We can idenify the record is equipment or venue by checking its nullity.

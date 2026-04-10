@@ -30,7 +30,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_06_132142) do
     t.date "date"
     t.integer "equipment_id", null: false
     t.boolean "is_absence"
-    t.boolean "is_returnLate"
+    t.boolean "is_returnLate", default: false
     t.time "time"
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
