@@ -1,8 +1,7 @@
 <%= form_with(model: venue_record, data: {turbo: false}) do |form| %>
   <% if venue_record.errors.any? %>
     <div style="color: red">
-      <h2><%= pluralize(venue_record.errors.count, "error") %> prohibited this new booking record from being saved:</h2>
-
+      <h2><%= pluralize(venue_record.errors.count, "error") %> prohibited this booking from being saved:</h2>
       <ul>
         <% venue_record.errors.each do |error| %>
           <li><%= error.full_message %></li>
@@ -10,17 +9,63 @@
       </ul>
     </div>
   <% end %>
-  
+
   <%= form.hidden_field :venue_id, value: @venue_record.venue.id %>
 
   <div>
     <%= form.label :date, style: "display: block" %>
-    <%= form.date_field :date %>
+    <%# ← Add data-venue-id so JS knows which venue to query %>
+    <%= form.date_field :date,
+          id: "booking_date",
+          data: { venue_id: @venue_record.venue.id } %>
   </div>
 
   <div>
-    <%= form.label :time, style: "display: block" %>
-    <%= form.time_field :time %>
+    <%= form.label :time, "Select a Time Slot", style: "display: block; font-weight: bold; margin-bottom: 8px;" %>
+
+    <%# Hidden field stores the selected time on submit %>
+    <%= form.hidden_field :time, id: "selected_time_value" %>
+
+    <%
+      # Pre-load booked times if date already known (edit form or validation error re-render)
+      selected_date = @venue_record.date
+      booked_times  = selected_date ? VenueRecord
+        .where(venue_id: @venue_record.venue.id, date: selected_date)
+        .where.not(id: @venue_record.id)
+        .pluck(:time)
+        .map { |t| t.strftime("%H:%M") } : []
+    %>
+
+    <table class="timeslot-table">
+      <thead>
+        <tr>
+          <th>Hour</th>
+          <th>:00</th>
+          <th>:30</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% (8..21).each do |hour| %>
+          <tr>
+            <td class="hour-label"><%= "#{hour.to_s.rjust(2,'0')}:xx" %></td>
+            <% [":00", ":30"].each do |min| %>
+              <% slot       = "#{hour.to_s.rjust(2,'0')}#{min}" %>
+              <% is_booked  = booked_times.include?(slot) %>
+              <% is_selected = @venue_record.time&.strftime("%H:%M") == slot %>
+              <td class="timeslot <%= is_booked ? 'booked' : 'available' %> <%= is_selected ? 'selected' : '' %>"
+                  data-time="<%= slot %>"
+                  <%= 'data-booked="true"' if is_booked %>>
+                <%= is_booked ? "Booked" : slot %>
+              </td>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <% if @venue_record.errors[:time].any? %>
+      <p style="color: red; margin-top: 4px;"><%= @venue_record.errors[:time].first %></p>
+    <% end %>
   </div>
 
   <div>
