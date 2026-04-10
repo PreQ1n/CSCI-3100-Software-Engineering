@@ -3,4 +3,6 @@ class Venue < ApplicationRecord
 
     validates :name, presence: true, uniqueness: true
     validates :venue_id, uniqueness: true, allow_blank: true
+    validates :latitude, presence: true
+    validates :longitude, presence: true
 end

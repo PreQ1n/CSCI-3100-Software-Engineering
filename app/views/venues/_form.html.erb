@@ -1,4 +1,16 @@
-<%= form_with(model: venue) do |form| %>
+<% content_for :head do %>
+  <meta name="turbo-cache-control" content="no-store">
+  <script>
+    (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
+      key: "<%= ENV['GOOGLE_MAPS_API_KEY'] %>",
+      v: "weekly",
+      region: "HK",
+      language: "en",
+    });
+  </script>
+<% end %>
+
+<%= form_with(model: venue, data: {turbo: false}) do |form| %>
   <% if venue.errors.any? %>
     <div style="color: red">
       <h2><%= pluralize(venue.errors.count, "error") %> prohibited this venue from being saved:</h2>
@@ -11,22 +23,102 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :name, style: "display: block" %>
-    <%= form.text_field :name %>
-  </div>
+  <div style="display: flex;">
+    <div>
+      <div>
+        <%= form.label :name, style: "display: block" %>
+        <%= form.text_field :name, id: "search-input", placeholder: "Search for a building..." %>
+      </div>
 
-  <div>
-    <%= form.label :building, style: "display: block" %>
-    <%= form.text_field :building %>
-  </div>
+      <div>
+        <%= form.label :building, style: "display: block" %>
+        <%= form.text_field :building, id: "venue_building" %>
+      </div>
 
-  <div>
-    <%= form.label :description, style: "display: block" %>
-    <%= form.textarea :description %>
-  </div>
+      <div>
+        <%= form.label :latitude, style: "display: block" %>
+        <%= form.number_field :latitude, id:"latitude", step: "any" %>
+      </div>
 
-  <div>
-    <%= form.submit %>
+      <div>
+        <%= form.label :longitude, style: "display: block" %>
+        <%= form.number_field :longitude, id:"longitude", step: "any" %>
+      </div>
+
+      <div>
+        <%= form.label :description, style: "display: block" %>
+        <%= form.textarea :description %>
+      </div>
+
+      <div>
+        <%= form.submit %>
+      </div>
+    </div>
+
+    <div id="map" style="width: 50%; height: 50vh; padding: 20px;">
+      <gmp-map map-id="MAP_ID"></gmp-map>
+    </div>
   </div>
+  
+  <script>
+    let map;
+    let AdvancedMarkerElement;
+    let center =  { lat: 22.3565, lng: 114.1363 }; // default coords
+    let selectedPlace;
+    
+    async function initMap() {
+      if (map) return;
+
+      const { Map, RenderingType } = await google.maps.importLibrary("maps");
+      const { Autocomplete } = await google.maps.importLibrary("places");
+      ({ AdvancedMarkerElement } = await google.maps.importLibrary("marker"));
+
+      map = new Map(document.getElementById("map"), {
+        center: center,
+        zoom: 15,
+        renderingType: RenderingType.VECTOR,
+        mapId: "MAP_ID",
+      });
+      
+      const autoComplete = new Autocomplete(
+        document.getElementById("search-input"),
+        {
+          types: ["establishment"],
+          bounds: {
+            north: 22.42834,
+            south: 22.41179,
+            east: 114.21307,
+            west: 114.20269,
+          },
+          strictBounds: true,
+          fields: ["name", "geometry"],
+        }
+      );
+
+      autoComplete.addListener("place_changed", function() {
+        const place = autoComplete.getPlace();
+        selectedPlace = {
+          name: place.name,
+          location: place.geometry.location,
+        };
+      
+        document.getElementById("venue_building").value = selectedPlace.name;
+        document.getElementById("latitude").value = selectedPlace.location.lat();
+        document.getElementById("longitude").value = selectedPlace.location.lng();
+        
+        center = selectedPlace.location;
+        map.setCenter(center);
+        addMarker();
+      });
+    }
+
+    async function addMarker() {
+      const marker = new AdvancedMarkerElement({
+        map,
+        position: center,
+      });
+    }
+
+    initMap();
+  </script>
 <% end %>
