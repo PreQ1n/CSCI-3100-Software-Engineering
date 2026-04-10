@@ -22,7 +22,7 @@ class VenuesController < ApplicationController
 
   # GET /venues/new
   def new
-    @venue = Venue.new
+    @venue = Venue.new()
   end
 
   # GET /venues/1/edit
@@ -35,6 +35,7 @@ class VenuesController < ApplicationController
 
     respond_to do |format|
       if @venue.save
+        @venue.update(venue_id: @venue.id)
         format.html { redirect_to @venue, notice: "Venue was successfully created." }
         format.json { render :show, status: :created, location: @venue }
       else

@@ -2,6 +2,9 @@ class VenueRecord < ApplicationRecord
   belongs_to :user
   belongs_to :venue
 
+  validates :date, presence: true
+  validates :time, presence: true
+
   def venue_name
     venue&.name
   end

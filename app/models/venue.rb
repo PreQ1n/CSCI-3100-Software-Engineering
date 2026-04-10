@@ -1,4 +1,6 @@
 class Venue < ApplicationRecord
-    validates :venue_id, uniqueness: true, allow_blank: true
     has_many :venue_records
+
+    validates :name, presence: true, uniqueness: true
+    validates :venue_id, uniqueness: true, allow_blank: true
 end
