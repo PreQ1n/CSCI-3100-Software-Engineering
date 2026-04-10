@@ -1,7 +1,7 @@
-<%= form_with(model: venue_record) do |form| %>
+<%= form_with(model: venue_record, data: {turbo: false}) do |form| %>
   <% if venue_record.errors.any? %>
     <div style="color: red">
-      <h2><%= pluralize(venue_record.errors.count, "error") %> prohibited this venue_record from being saved:</h2>
+      <h2><%= pluralize(venue_record.errors.count, "error") %> prohibited this new booking record from being saved:</h2>
 
       <ul>
         <% venue_record.errors.each do |error| %>
@@ -11,7 +11,7 @@
     </div>
   <% end %>
   
-  <%= form.hidden_field :venue_id, value: params[:venue_id] %>
+  <%= form.hidden_field :venue_id, value: @venue_record.venue.id %>
 
   <div>
     <%= form.label :date, style: "display: block" %>
@@ -24,6 +24,6 @@
   </div>
 
   <div>
-    <%= form.submit %>
+    <%= form.submit "Book" %>
   </div>
 <% end %>

@@ -1,11 +1,11 @@
 <% content_for :title, "New equipment record" %>
 
-<h1>New equipment record</h1>
+<h1>Book Equipment: <%= @equipment_record.equipment.present? ? @equipment_record.equipment.name : "" %> </h1>
 
 <%= render "form", equipment_record: @equipment_record %>
 
 <br>
 
 <div>
-  <%= link_to "Back to equipment records", equipment_records_path %>
+  <%= link_to "Back to Equipment List", equipment_index_path %>
 </div>

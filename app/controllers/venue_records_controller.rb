@@ -16,7 +16,7 @@ class VenueRecordsController < ApplicationController
       user_authentication
       return
     end
-    @venue_record = VenueRecord.new(venue: Venue.find_by!(venue_id: params[:venue_id]))
+    @venue_record = VenueRecord.new(venue: Venue.find_by(venue_id: params[:venue_id]))
   end
 
   # GET /venue_records/1/edit
@@ -26,12 +26,13 @@ class VenueRecordsController < ApplicationController
   # POST /venue_records or /venue_records.json
   def create
     @venue_record = VenueRecord.new(venue_record_params)
-    @venue_record.venue = Venue.find_by(venue_id: params[:venue_record][:venue_id])
     @venue_record.user_id = current_user.id
+    @venue_record.venue = Venue.find_by(venue_id: params[:venue_record][:venue_id])
+    
 
     respond_to do |format|
       if @venue_record.save
-        format.html { redirect_to root_path, notice: "Venue record was successfully created." }
+        format.html { redirect_to root_path, notice: "Venue was successfully booked." }
         format.json { render :show, status: :created, location: @venue_record }
       else
         format.html { render :new, status: :unprocessable_entity }

@@ -44,7 +44,7 @@
                     <% if !record.is_absence %>
                         <td> Confirmed! </td>
                     <% else %>
-                        <%= button_to "✅Press to Confirm", confirm_path(type: "equipment", id: record.id), method: :post %>
+                        <td> <%= button_to "✅Press to Confirm", confirm_path(type: "equipment", id: record.id), method: :post %> </td>
                     <% end %>
                 </tr>
             <% end %>

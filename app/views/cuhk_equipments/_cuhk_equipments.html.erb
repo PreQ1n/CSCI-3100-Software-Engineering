@@ -15,7 +15,7 @@
               <td><%= highlight(cuhk_equipment.name, params[:query]) %></td>
               <td><%= highlight(cuhk_equipment.description, params[:query]) %></td>
               
-              <td><%= link_to "Show", cuhk_equipment, data: { turbo: false } %></td>
+              <td><%= link_to "Book", new_equipment_record_path(equipment_id: cuhk_equipment.id), data: { turbo: false } %></td>
               <%# Fixed: changed 'venue' to 'cuhk_equipment' %>
               <td><%= link_to "Edit", edit_cuhk_equipment_path(cuhk_equipment), data: { turbo: false } %></td>
               <td><%= link_to "Delete", cuhk_equipment, data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %></td>
