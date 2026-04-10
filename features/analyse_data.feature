@@ -5,19 +5,19 @@ Feature: Analytics Dashboard
   So that I can monitor resource usage and user behavior
 
 Background:
-  Given the following venues exist:
+  Given the following analytics venues exist:
     | id | name        | 
     | 1  | LSB LT1     |
     | 2  | ERB 407     | 
     | 3  | SC L3       | 
 
-  And the following equipment exist:
+  And the following analytics equipment exist:
     | id | name          | quantity |
     | 1  | Projector     | 5        |
     | 2  | Laptop        | 10       |
     | 3  | Microscope    | 2        |
 
-  And the following users exist:
+  And the following analytics users exist:
     | id | email                | faculty       | college      | major         |
     | 1  | user1@example.com    | Engineering   | Chung Chi    | Computer Sci  |
     | 2  | user2@example.com    | Business      | Shaw         | Marketing     |
@@ -32,7 +32,7 @@ Background:
     | 11 | user11@example.com   | Business      | Chung Chi    | Finance       |
     | 12 | user12@example.com   | Engineering   | Chung Chi    | Electrical    |
 
-  And the following venue_records exist:
+  And the following analytics venue_records exist:
     | user_id | venue_id | date       | time  | is_absence |
     | 1       | 1        | 2026-03-01 | 10:00 | false      |
     | 2       | 1        | 2026-03-01 | 14:00 | false      |
@@ -56,7 +56,7 @@ Background:
     | 7       | 1        | 2026-03-05 | 11:00 | true       |   
     | 2       | 2        | 2026-03-05 | 15:00 | false      |
 
-  And the following equipment_records exist:
+  And the following analytics equipment_records exist:
     | user_id | equipment_id | date       | time  | is_absence | is_returnLate |
     | 1       | 1            | 2026-03-01 | 10:00 | false      | false         |
     | 2       | 1            | 2026-03-01 | 14:00 | false      | true          |  
@@ -79,19 +79,25 @@ Background:
     | 6       | 2            | 2026-03-05 | 10:00 | false      | false         |
     | 7       | 1            | 2026-03-05 | 11:00 | true       | false         |  
 
-Scenario: Overall usage rate is correctly displayed (Period: 2026-03-01 to 2026-03-05)
+Scenario: Booking frequency per user is shown
   Given I am logged in as an administrator
   When I visit the analytics dashboard
-  Then I should see "Overall Usage Rate"
-  And the overall usage rate should be displayed as "11.4%"
+  Then I should see a breakdown of user booking frequency
+  And I should see users categorized as "Repeat Users" or "One-Time Users"
+  And the repeat users count should be at least "1"
 
-Scenario: Weekly peak hours are correctly shown
+Scenario: Resource utilization per venue is shown
   Given I am logged in as an administrator
   When I visit the analytics dashboard
-  Then I should see a chart labeled "Peak Hours (Weekly)"
-  And the hour "10:00" should be among the top 3 peak hours
-  And the hour "11:00" should be among the top 3 peak hours
-  And the hour "15:00" should be among the top 3 peak hours
+  Then I should see a list of venues with their utilization rates
+  And "LSB LT1" should have the highest utilization rate
+  And each venue should display a utilization percentage
+
+Scenario: Average bookings per day is correctly displayed
+  Given I am logged in as an administrator
+  When I visit the analytics dashboard
+  Then I should see analytics text "Average Bookings Per Day"
+  And the average bookings per day should be displayed as "7.4"
 
 Scenario: Popular venues and equipment are correctly ranked
   Given I am logged in as an administrator
@@ -104,7 +110,7 @@ Scenario: Popular venues and equipment are correctly ranked
 Scenario: Absence rate is correctly displayed
   Given I am logged in as an administrator
   When I visit the analytics dashboard
-  Then I should see "Absence Rate"
+  Then I should see analytics text "Absence Rate"
   And the Absence rate should be displayed as "9.8%"
 
 Scenario: Faculty booking distribution is shown
@@ -137,5 +143,5 @@ Scenario: Top 5 majors by booking count are shown
 Scenario: Late return rate is correctly displayed
   Given I am logged in as an administrator
   When I visit the analytics dashboard
-  Then I should see "Late Return Rate"
+  Then I should see analytics text "Late Return Rate"
   And the late return rate should be displayed as "10.0%"

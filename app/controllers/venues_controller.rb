@@ -1,5 +1,6 @@
 class VenuesController < ApplicationController
   before_action :set_venue, only: %i[ show edit update destroy ]
+  before_action :admin_authentication, except: %i[ index show ]
 
   # GET /venues or /venues.json
   def index
