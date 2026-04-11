@@ -29,15 +29,15 @@ class VenueRecordsController < ApplicationController
     @venue_record.user_id = current_user.id
     @venue_record.venue = Venue.find_by(venue_id: params[:venue_record][:venue_id])
 
-
-    respond_to do |format|
+    begin
       if @venue_record.save
-        format.html { redirect_to root_path, notice: "Venue was successfully booked." }
-        format.json { render :show, status: :created, location: @venue_record }
+        redirect_to @venue_record, notice: "Booking confirmed!"
       else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @venue_record.errors, status: :unprocessable_entity }
+        render :new, status: :unprocessable_entity
       end
+    rescue ActiveRecord::RecordNotUnique
+      @venue_record.errors.add(:time, "This slot was just taken. Please pick another time.")
+      render :new, status: :unprocessable_entity
     end
   end
 

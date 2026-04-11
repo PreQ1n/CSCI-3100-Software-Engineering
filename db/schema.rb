@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_10_065413) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_11_171101) do
   create_table "cuhk_equipments", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "description"
@@ -60,6 +60,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_10_065413) do
     t.integer "user_id", null: false
     t.integer "venue_id", null: false
     t.index ["user_id"], name: "index_venue_records_on_user_id"
+    t.index ["venue_id", "date", "time"], name: "index_venue_records_on_venue_id_and_date_and_time", unique: true
     t.index ["venue_id"], name: "index_venue_records_on_venue_id"
   end
 
