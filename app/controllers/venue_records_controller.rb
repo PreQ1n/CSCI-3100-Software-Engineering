@@ -31,6 +31,7 @@ class VenueRecordsController < ApplicationController
 
     begin
       if @venue_record.save
+        BrevoEmail.venue_booking_confirmed(current_user, @venue_record)
         redirect_to @venue_record, notice: "Booking confirmed!"
       else
         render :new, status: :unprocessable_entity
