@@ -10,3 +10,18 @@
  */
 
 @import "simple_calendar";
+
+.timeslot-table { border-collapse: collapse; width: 100%; max-width: 480px; font-size: 0.875rem; }
+.timeslot-table th { background: #f3f4f6; padding: 6px 12px; border: 1px solid #d1d5db; font-weight: 600; }
+.timeslot-table td { padding: 6px 12px; border: 1px solid #d1d5db; text-align: center; }
+.hour-label       { background: #f9fafb; font-weight: 500; color: #374151; }
+
+/* 🟢 Available */
+.timeslot.available { background: #d1fae5; color: #065f46; cursor: pointer; transition: background 0.15s; }
+.timeslot.available:hover { background: #6ee7b7; }
+
+/* 🔴 Already booked */
+.timeslot.booked    { background: #fee2e2; color: #991b1b; cursor: not-allowed; font-style: italic; }
+
+/* 🔵 Currently selected */
+.timeslot.selected  { background: #2563eb !important; color: #fff !important; font-weight: bold; outline: 2px solid #1d4ed8; }
