@@ -1,0 +1,2 @@
+module EquipmentRecordsHelper
+end

@@ -1,0 +1,29 @@
+<%= form_with(model: equipment_record, data: {turbo: false}) do |form| %>
+  <% if equipment_record.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(equipment_record.errors.count, "error") %> prohibited this new equipment record from being saved:</h2>
+
+      <ul>
+        <% equipment_record.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= form.hidden_field :equipment_id, value: @equipment_record.equipment.id %>
+
+  <div>
+    <%= form.label :date, style: "display: block" %>
+    <%= form.date_field :date %>
+  </div>
+
+  <div>
+    <%= form.label :time, style: "display: block" %>
+    <%= form.time_field :time %>
+  </div>
+
+  <div>
+    <%= form.submit "Book" %>
+  </div>
+<% end %>

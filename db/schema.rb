@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_06_132142) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_11_171101) do
   create_table "cuhk_equipments", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "description"
@@ -20,6 +20,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_06_132142) do
 
   create_table "equipment", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.string "description"
     t.string "name", null: false
     t.integer "quantity"
     t.datetime "updated_at", null: false
@@ -59,6 +60,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_06_132142) do
     t.integer "user_id", null: false
     t.integer "venue_id", null: false
     t.index ["user_id"], name: "index_venue_records_on_user_id"
+    t.index ["venue_id", "date", "time"], name: "index_venue_records_on_venue_id_and_date_and_time", unique: true
     t.index ["venue_id"], name: "index_venue_records_on_venue_id"
   end
 
@@ -66,9 +68,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_06_132142) do
     t.string "building"
     t.datetime "created_at", null: false
     t.text "description"
+    t.decimal "latitude", precision: 10, scale: 6
+    t.decimal "longitude", precision: 10, scale: 6
     t.string "name", null: false
     t.datetime "updated_at", null: false
-    t.string "venue_id"
+    t.integer "venue_id"
     t.index ["name"], name: "index_venues_on_name"
     t.index ["venue_id"], name: "index_venues_on_venue_id", unique: true
   end

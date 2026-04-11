@@ -2,6 +2,9 @@ class EquipmentRecord < ApplicationRecord
   belongs_to :user
   belongs_to :equipment
 
+  validates :date, presence: true
+  validates :time, presence: true
+
   def equipment_name
     equipment&.name
   end

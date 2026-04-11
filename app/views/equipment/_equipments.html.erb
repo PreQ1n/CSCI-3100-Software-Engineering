@@ -1,0 +1,34 @@
+<%= turbo_frame_tag "equipments" do %>
+    <table>
+      <thead>
+        <tr>
+          <th>Equipment Name</th>
+          <th>Description</th>
+          <th colspan="3">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if equipments.any? %>
+          <%# Fixed spelling: equipments (was eqiupments) %>
+          <% equipments.each do |equipment| %>
+            <tr>
+              <td><%= highlight(equipment.name, params[:query]) %></td>
+              <td><%= highlight(equipment.description, params[:query]) %></td>
+              <td><%= highlight(equipment.quantity.to_s, params[:query]) %></td>
+              
+              <td><%= link_to "Book", new_equipment_record_path(equipment_id: equipment.id), data: { turbo: false } %></td>
+              <%# Fixed: changed 'venue' to 'equipment' %>
+              <td><%= link_to "Edit", edit_equipment_path(equipment), data: { turbo: false } %></td>
+              <td><%= link_to "Delete", equipment, data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %></td>
+            </tr>
+          <% end %>
+        <% else %>
+          <tr>
+            <td colspan="6" style="text-align: center; padding: 20px; color: #999;">
+              No equipment found matching "<%= params[:query] %>"
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>

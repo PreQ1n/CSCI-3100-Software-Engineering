@@ -1,0 +1,12 @@
+<% content_for :title, "New venue record" %>
+
+<h1>Book Venue: <%= @venue_record.venue.present? ? @venue_record.venue.name : "" %> </h1>
+
+
+<%= render "form", venue_record: @venue_record %>
+
+<br>
+
+<div>
+  <%= link_to "Back to Venue List", venues_path %>
+</div>
