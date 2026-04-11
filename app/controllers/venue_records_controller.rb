@@ -28,7 +28,7 @@ class VenueRecordsController < ApplicationController
     @venue_record = VenueRecord.new(venue_record_params)
     @venue_record.user_id = current_user.id
     @venue_record.venue = Venue.find_by(venue_id: params[:venue_record][:venue_id])
-    
+
 
     respond_to do |format|
       if @venue_record.save
@@ -62,6 +62,14 @@ class VenueRecordsController < ApplicationController
       format.html { redirect_to venue_records_path, notice: "Venue record was successfully destroyed.", status: :see_other }
       format.json { head :no_content }
     end
+  end
+
+  def booked_slots
+    booked = VenueRecord
+      .where(venue_id: params[:venue_id], date: params[:date])
+      .pluck(:time)
+      .map { |t| t.strftime("%H:%M") }
+    render json: booked
   end
 
   private
