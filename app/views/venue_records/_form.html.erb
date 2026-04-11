@@ -40,15 +40,12 @@
       <thead>
         <tr>
           <th>Hour</th>
-          <th>:00</th>
-          <th>:30</th>
         </tr>
       </thead>
       <tbody>
-        <% (8..21).each do |hour| %>
+        <% (9..21).each do |hour| %>
           <tr>
-            <td class="hour-label"><%= "#{hour.to_s.rjust(2,'0')}:xx" %></td>
-            <% [":00", ":30"].each do |min| %>
+            <% [":00"].each do |min| %>
               <% slot       = "#{hour.to_s.rjust(2,'0')}#{min}" %>
               <% is_booked  = booked_times.include?(slot) %>
               <% is_selected = @venue_record.time&.strftime("%H:%M") == slot %>
