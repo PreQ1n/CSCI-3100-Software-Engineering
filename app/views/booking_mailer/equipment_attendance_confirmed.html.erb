@@ -5,7 +5,10 @@
 <p>Here are your booking details:</p>
 <ul>
   <li><strong>Equipment:</strong> <%= equipment_record.equipment.name %></li>
-  <li><strong>Date:</strong> <%= equipment_record.date %></li>
-  <li><strong>Time:</strong> <%= equipment_record.time.strftime("%H:%M") %></li>
+  <li><strong>Borrow Date:</strong> <%= equipment_record.borrow_date %></li>
+  <li><strong>Expected Return Date:</strong> <%= equipment_record.expected_return_date %></li>
+  <% if equipment_record.time.present? %>
+    <li><strong>Time:</strong> <%= equipment_record.time.strftime("%H:%M") %></li>
+  <% end %>
 </ul>
 <p>If you have any questions, please contact support.</p>

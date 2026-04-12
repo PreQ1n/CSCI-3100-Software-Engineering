@@ -1,7 +1,11 @@
-function refreshSlots(venueId, date) {
+function refreshSlots(resourceId, date, resourceType) {
   if (!date) return;
 
-  fetch(`/venue_records/booked_slots?venue_id=${venueId}&date=${date}`)
+  const url = resourceType === 'venue'
+    ? `/venue_records/booked_slots?venue_id=${resourceId}&date=${date}`
+    : `/equipment_records/booked_slots?equipment_id=${resourceId}&date=${date}`;
+
+  fetch(url)
     .then(r => r.json())
     .then(bookedTimes => {
       document.querySelectorAll('.timeslot').forEach(cell => {
@@ -23,16 +27,18 @@ function refreshSlots(venueId, date) {
 }
 
 const dateField = document.getElementById('booking_date');
+const resourceType = dateField.dataset.resourceType;
+const resourceId = dateField.dataset.venueId || dateField.dataset.equipmentId;
 
-// When date changes, re-fetch 
+// When date changes, re-fetch
 dateField.addEventListener('change', function () {
-  refreshSlots(this.dataset.venueId, this.value);
+  refreshSlots(resourceId, this.value, resourceType);
 });
 
 // If date already has a value, on page load — refresh
 // (covers edit form AND validation re-render)
 if (dateField.value) {
-  refreshSlots(dateField.dataset.venueId, dateField.value);
+  refreshSlots(resourceId, dateField.value, resourceType);
 }
 
 // Click to select an available slot
@@ -47,5 +53,5 @@ document.querySelectorAll('.timeslot').forEach(cell => {
 
 // Auto-refresh every 30 seconds to catch new bookings by other users
 setInterval(() => {
-  if (dateField.value) refreshSlots(dateField.dataset.venueId, dateField.value);
+  if (dateField.value) refreshSlots(resourceId, dateField.value, resourceType);
 }, 30000);

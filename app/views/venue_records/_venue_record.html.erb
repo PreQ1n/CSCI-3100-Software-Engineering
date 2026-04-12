@@ -1,2 +1,18 @@
-<div id="<%= dom_id venue_record %>">
+<div id="<%= dom_id venue_record %>" class="venue-record-item">
+  <p>
+    <strong>Date:</strong>
+    <%= venue_record.date.strftime("%Y-%m-%d") %>
+  </p>
+  <p>
+    <strong>Venue:</strong>
+    <%= venue_record.venue_name %>
+  </p>
+  <p>
+    <strong>Timeslot:</strong>
+    <%= venue_record.time.strftime("%H:%M") %>
+  </p>
+
+  <p>
+    <%= link_to "Cancel Booking", venue_record, data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to cancel this booking?" } %>
+  </p>
 </div>

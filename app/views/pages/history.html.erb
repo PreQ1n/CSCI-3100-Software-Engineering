@@ -37,15 +37,15 @@
             <tr>
               <% if @record_type == 'equipment' %>
                 <td><%= record.equipment.name %></td>
-                <td><%= record.date.strftime('%B %d, %Y') %></td>  <!-- Formatted date -->
+                <td><%= record.borrow_date&.strftime('%B %d, %Y') %></td>  <!-- Formatted borrow date -->
                 <td><%= record.is_absence ? 'Yes' : 'No' %></td>
                 <td><%= record.is_returnLate ? 'Yes' : 'No' %></td>
-                <td><%= record.time.strftime('%I:%M %p') %></td>  <!-- Formatted time -->
+                <td><%= record.expected_return_date&.strftime('%B %d, %Y') %></td>  <!-- Formatted return date -->
               <% else %>
                 <td><%= record.venue.name %></td>
-                <td><%= record.date.strftime('%B %d, %Y') %></td>
+                <td><%= record.date&.strftime('%B %d, %Y') %></td>
                 <td><%= record.is_absence ? 'Yes' : 'No' %></td>
-                <td><%= record.time.strftime('%I:%M %p') %></td>
+                <td><%= record.time&.strftime('%I:%M %p') %></td>
               <% end %>
             </tr>
           <% end %>

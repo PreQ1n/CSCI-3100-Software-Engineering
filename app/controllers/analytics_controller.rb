@@ -3,8 +3,8 @@ class AnalyticsController < ApplicationController
   before_action :authorize_admin!
 
   def dashboard
-    @start_date = Date.new(2026, 3, 1)
-    @end_date = Date.new(2026, 3, 5)
+    @start_date = params[:start_date].present? ? Date.parse(params[:start_date]) : 1.week.ago.to_date
+    @end_date = params[:end_date].present? ? Date.parse(params[:end_date]) : Date.today
 
     # Calculate all analytics metrics
     calculate_usage_rate
@@ -30,9 +30,9 @@ class AnalyticsController < ApplicationController
 
   def calculate_usage_rate
     total_records = VenueRecord.where(date: @start_date..@end_date).count +
-                    EquipmentRecord.where(date: @start_date..@end_date).count
+                    EquipmentRecord.where(borrow_date: @start_date..@end_date).count
     total_absence = VenueRecord.where(date: @start_date..@end_date, is_absence: true).count +
-                    EquipmentRecord.where(date: @start_date..@end_date, is_absence: true).count
+                    EquipmentRecord.where(borrow_date: @start_date..@end_date, is_absence: true).count
     
     usage_count = total_records - total_absence
     total_possible = User.count * 5 * 2 # 12 users * 5 days * 2 record types (venue + equipment)
@@ -42,16 +42,16 @@ class AnalyticsController < ApplicationController
 
   def calculate_absence_rate
     total_records = VenueRecord.where(date: @start_date..@end_date).count +
-                    EquipmentRecord.where(date: @start_date..@end_date).count
+                    EquipmentRecord.where(borrow_date: @start_date..@end_date).count
     total_absence = VenueRecord.where(date: @start_date..@end_date, is_absence: true).count +
-                    EquipmentRecord.where(date: @start_date..@end_date, is_absence: true).count
+                    EquipmentRecord.where(borrow_date: @start_date..@end_date, is_absence: true).count
     
     @absence_rate = ((total_absence.to_f / total_records) * 100).round(1)
   end
 
   def calculate_late_return_rate
-    total_equipment_records = EquipmentRecord.where(date: @start_date..@end_date).count
-    late_returns = EquipmentRecord.where(date: @start_date..@end_date, is_returnLate: true).count
+    total_equipment_records = EquipmentRecord.where(borrow_date: @start_date..@end_date).count
+    late_returns = EquipmentRecord.where(borrow_date: @start_date..@end_date, is_returnLate: true).count
     
     @late_return_rate = ((late_returns.to_f / total_equipment_records) * 100).round(1)
   end
@@ -65,7 +65,7 @@ class AnalyticsController < ApplicationController
   end
 
   def calculate_top_equipment
-    @top_equipment = EquipmentRecord.where(date: @start_date..@end_date)
+    @top_equipment = EquipmentRecord.where(borrow_date: @start_date..@end_date)
                                      .group_by(&:equipment_id)
                                      .map { |equipment_id, records| [Equipment.find(equipment_id).name, records.count] }
                                      .sort_by { |_name, count| -count }
@@ -79,7 +79,7 @@ class AnalyticsController < ApplicationController
                                         .count
                                         .merge(
                                           EquipmentRecord.joins(:user)
-                                                         .where(date: @start_date..@end_date)
+                                                         .where(borrow_date: @start_date..@end_date)
                                                          .group('users.faculty')
                                                          .count
                                         ) { |_k, v1, v2| v1 + v2 }
@@ -93,7 +93,7 @@ class AnalyticsController < ApplicationController
                                         .count
                                         .merge(
                                           EquipmentRecord.joins(:user)
-                                                         .where(date: @start_date..@end_date)
+                                                         .where(borrow_date: @start_date..@end_date)
                                                          .group('users.college')
                                                          .count
                                         ) { |_k, v1, v2| v1 + v2 }
@@ -107,7 +107,7 @@ class AnalyticsController < ApplicationController
                                       .count
                                       .merge(
                                         EquipmentRecord.joins(:user)
-                                                       .where(date: @start_date..@end_date)
+                                                       .where(borrow_date: @start_date..@end_date)
                                                        .group('users.major')
                                                        .count
                                       ) { |_k, v1, v2| v1 + v2 }

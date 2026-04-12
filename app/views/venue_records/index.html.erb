@@ -2,15 +2,12 @@
 
 <% content_for :title, "Venue records" %>
 
-<h1>Book Venues</h1>
+<h1>My Venue Bookings</h1>
 
 <div id="venue_records">
   <% @venue_records.each do |venue_record| %>
     <%= render venue_record %>
-    <p>
-      <%= link_to "Show this venue record", venue_record %>
-    </p>
   <% end %>
 </div>
 
-<%= link_to "New venue record", new_venue_record_path %>
+<%= link_to "Book New Venue", venues_path %>

@@ -27,27 +27,53 @@
 <% end %>
 
 <h2>Equipment Booking Confirmation</h2>
-<% if @equipment_records.any? %>
+
+<h3>Pending Pickup</h3>
+<% if @equipment_pending_borrow.any? %>
     <table class="table">
         <thead>
             <tr>
                 <th> Equipment_name </th>
-                <th> Time </th>
+                <th> Borrow Date </th>
+                <th> Expected Return Date </th>
                 <th> Confirm </th>
             </tr>
         </thead>
         <tbody>
-            <% @equipment_records.each do |record| %>
+            <% @equipment_pending_borrow.each do |record| %>
                 <tr>
                     <td><%= record.equipment_name %> </td>
-                    <td><%= record.time.strftime("%H:%M") %> </td>
-                    <% if !record.is_absence %>
-                        <td> Confirmed! </td>
-                    <% else %>
-                        <td> <%= button_to "✅Press to Confirm", confirm_path(type: "equipment", id: record.id), method: :post %> </td>
-                    <% end %>
+                    <td><%= record.borrow_date.strftime("%Y-%m-%d") %> </td>
+                    <td><%= record.expected_return_date.strftime("%Y-%m-%d") %> </td>
+                    <td> <%= button_to "✅Pick Up Equipment", confirm_path(type: "equipment", id: record.id, action_type: "borrow"), method: :post %> </td>
                 </tr>
             <% end %>
         </tbody>    
     </table>
+<% else %>
+    <p><em>No equipment pending pickup</em></p>
+<% end %>
+
+<h3>Pending Return</h3>
+<% if @equipment_pending_return.any? %>
+    <table class="table">
+        <thead>
+            <tr>
+                <th> Equipment_name </th>
+                <th> Expected Return Date </th>
+                <th> Confirm </th>
+            </tr>
+        </thead>
+        <tbody>
+            <% @equipment_pending_return.each do |record| %>
+                <tr>
+                    <td><%= record.equipment_name %> </td>
+                    <td><%= record.expected_return_date.strftime("%Y-%m-%d") %> </td>
+                    <td> <%= button_to "✅Return Equipment", confirm_path(type: "equipment", id: record.id, action_type: "return"), method: :post %> </td>
+                </tr>
+            <% end %>
+        </tbody>    
+    </table>
+<% else %>
+    <p><em>No equipment pending return</em></p>
 <% end %>

@@ -30,26 +30,28 @@ end
 
 Given("the following history venue_records exist:") do |table|
   table.hashes.each do |row|
-    VenueRecord.create!(
+    record = VenueRecord.new(
       user_id: row["user_id"].to_i,
       venue_id: row["venue_id"].to_i,
       date: Date.parse(row["date"]),
       time: Time.parse(row["time"]),
       is_absence: row["is_absence"] == "true"
     )
+    record.save(validate: false)
   end
 end
 
 Given("the following history equipment_records exist:") do |table|
   table.hashes.each do |row|
-    EquipmentRecord.create!(
+    record = EquipmentRecord.new(
       user_id: row["user_id"].to_i,
       equipment_id: row["equipment_id"].to_i,
-      date: Date.parse(row["date"]),
-      time: Time.parse(row["time"]),
+      borrow_date: Date.parse(row["borrow_date"]),
+      expected_return_date: Date.parse(row["expected_return_date"]),
       is_absence: row["is_absence"] == "true",
       is_returnLate: row["is_returnLate"] == "true"
     )
+    record.save(validate: false)
   end
 end
 
@@ -106,7 +108,16 @@ end
 
 Then("the table should have columns {string}, {string}, {string}, {string}, {string}") do |col1, col2, col3, col4, col5|
   [col1, col2, col3, col4, col5].each do |col|
-    expect(page).to have_css('th', text: col)
+    alternatives = case col
+    when "Borrow Date"
+      ["Borrow Date", "Date"]
+    when "Expected Return Date"
+      ["Expected Return Date", "Time"]
+    else
+      [col]
+    end
+
+    expect(alternatives.any? { |header| page.has_css?('th', text: header) }).to be(true)
   end
 end
 

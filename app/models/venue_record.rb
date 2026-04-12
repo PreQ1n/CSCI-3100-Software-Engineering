@@ -6,6 +6,12 @@ class VenueRecord < ApplicationRecord
   validates :time, presence: true
   validates :time, uniqueness: { scope: [:venue_id, :date],
                                 message: "This timeslot was just booked by someone else. Please choose another." }
+  validate :date_cannot_be_in_the_past
+
+  def date_cannot_be_in_the_past
+    return if date.blank?
+    errors.add(:date, "cannot be in the past") if date < Date.current
+  end
 
   def venue_name
     venue&.name

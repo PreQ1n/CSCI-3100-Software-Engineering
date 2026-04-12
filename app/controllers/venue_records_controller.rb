@@ -1,13 +1,9 @@
 class VenueRecordsController < ApplicationController
-  before_action :set_venue_record, only: %i[ show edit update destroy ]
+  before_action :set_venue_record, only: %i[ edit update destroy ]
 
   # GET /venue_records or /venue_records.json
   def index
-    @venue_records = VenueRecord.all
-  end
-
-  # GET /venue_records/1 or /venue_records/1.json
-  def show
+    @venue_records = current_user.venue_records.includes(:venue)
   end
 
   # GET /venue_records/new
@@ -32,8 +28,9 @@ class VenueRecordsController < ApplicationController
     begin
       if @venue_record.save
         BrevoEmail.venue_booking_confirmed(current_user, @venue_record)
-        redirect_to @venue_record, notice: "Booking confirmed!"
+        redirect_to venue_records_path, notice: "Booking confirmed!"
       else
+        flash.now[:alert] = @venue_record.errors.full_messages.to_sentence
         render :new, status: :unprocessable_entity
       end
     rescue ActiveRecord::RecordNotUnique
@@ -44,14 +41,10 @@ class VenueRecordsController < ApplicationController
 
   # PATCH/PUT /venue_records/1 or /venue_records/1.json
   def update
-    respond_to do |format|
-      if @venue_record.update(venue_record_params)
-        format.html { redirect_to @venue_record, notice: "Venue record was successfully updated.", status: :see_other }
-        format.json { render :show, status: :ok, location: @venue_record }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @venue_record.errors, status: :unprocessable_entity }
-      end
+    if @venue_record.update(venue_record_params)
+      redirect_to venue_records_path, notice: "Venue record was successfully updated.", status: :see_other
+    else
+      render :edit, status: :unprocessable_entity
     end
   end
 
@@ -76,7 +69,7 @@ class VenueRecordsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_venue_record
-      @venue_record = VenueRecord.find(params.expect(:id))
+      @venue_record = VenueRecord.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.

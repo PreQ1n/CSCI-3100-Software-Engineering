@@ -57,27 +57,27 @@ Background:
     | 2       | 2        | 2026-03-05 | 15:00 | false      |
 
   And the following analytics equipment_records exist:
-    | user_id | equipment_id | date       | time  | is_absence | is_returnLate |
-    | 1       | 1            | 2026-03-01 | 10:00 | false      | false         |
-    | 2       | 1            | 2026-03-01 | 14:00 | false      | true          |  
-    | 3       | 2            | 2026-03-01 | 15:00 | false      | false         |
-    | 4       | 3            | 2026-03-02 | 09:00 | false      | false         |
-    | 5       | 1            | 2026-03-02 | 11:00 | false      | false         |
-    | 1       | 2            | 2026-03-02 | 13:00 | false      | false         |
-    | 6       | 1            | 2026-03-02 | 16:00 | false      | false         |
-    | 7       | 1            | 2026-03-02 | 17:00 | false      | false         |
-    | 2       | 2            | 2026-03-03 | 10:00 | false      | false         |
-    | 3       | 3            | 2026-03-03 | 15:00 | false      | false         |
-    | 8       | 1            | 2026-03-03 | 09:00 | false      | false         |
-    | 9       | 2            | 2026-03-03 | 11:00 | true       | false         |  
-    | 10      | 1            | 2026-03-03 | 12:00 | false      | false         |
-    | 11      | 2            | 2026-03-04 | 14:00 | false      | true          |  
-    | 12      | 3            | 2026-03-04 | 10:00 | false      | false         |
-    | 1       | 1            | 2026-03-04 | 18:00 | false      | false         |
-    | 4       | 2            | 2026-03-04 | 19:00 | false      | false         |
-    | 5       | 1            | 2026-03-05 | 09:00 | false      | false         |
-    | 6       | 2            | 2026-03-05 | 10:00 | false      | false         |
-    | 7       | 1            | 2026-03-05 | 11:00 | true       | false         |  
+    | user_id | equipment_id | borrow_date | expected_return_date | is_absence | is_returnLate |
+    | 1       | 1            | 2026-03-01  | 2026-03-02           | false      | false         |
+    | 2       | 1            | 2026-03-01  | 2026-03-03           | false      | true          |
+    | 3       | 2            | 2026-03-01  | 2026-03-02           | false      | false         |
+    | 4       | 3            | 2026-03-02  | 2026-03-03           | false      | false         |
+    | 5       | 1            | 2026-03-02  | 2026-03-03           | false      | false         |
+    | 1       | 2            | 2026-03-02  | 2026-03-04           | false      | false         |
+    | 6       | 1            | 2026-03-02  | 2026-03-03           | false      | false         |
+    | 7       | 1            | 2026-03-02  | 2026-03-03           | false      | false         |
+    | 2       | 2            | 2026-03-03  | 2026-03-04           | false      | false         |
+    | 3       | 3            | 2026-03-03  | 2026-03-04           | false      | false         |
+    | 8       | 1            | 2026-03-03  | 2026-03-04           | false      | false         |
+    | 9       | 2            | 2026-03-03  | 2026-03-05           | true       | false         |
+    | 10      | 1            | 2026-03-03  | 2026-03-04           | false      | false         |
+    | 11      | 2            | 2026-03-04  | 2026-03-06           | false      | true          |
+    | 12      | 3            | 2026-03-04  | 2026-03-05           | false      | false         |
+    | 1       | 1            | 2026-03-04  | 2026-03-05           | false      | false         |
+    | 4       | 2            | 2026-03-04  | 2026-03-05           | false      | false         |
+    | 5       | 1            | 2026-03-05  | 2026-03-06           | false      | false         |
+    | 6       | 2            | 2026-03-05  | 2026-03-06           | false      | false         |
+    | 7       | 1            | 2026-03-05  | 2026-03-06           | true       | false         | 
 
 Scenario: Booking frequency per user is shown
   Given I am logged in as an administrator
@@ -97,7 +97,7 @@ Scenario: Average bookings per day is correctly displayed
   Given I am logged in as an administrator
   When I visit the analytics dashboard
   Then I should see analytics text "Average Bookings Per Day"
-  And the average bookings per day should be displayed as "7.4"
+  And the average bookings per day should be displayed as "7.2"
 
 Scenario: Popular venues and equipment are correctly ranked
   Given I am logged in as an administrator
@@ -118,20 +118,20 @@ Scenario: Faculty booking distribution is shown
   When I visit the analytics dashboard
   Then I should see a breakdown by faculty
   And "Engineering" should have the highest booking count
-  And the booking count for "Engineering" should be displayed as "10"
-  And the booking count for "Business" should be displayed as "8"
+  And the booking count for "Engineering" should be displayed as "18"
+  And the booking count for "Business" should be displayed as "10"
   And the booking count for "Science" should be displayed as "4"
-  And the booking count for "Social Science" should be displayed as "2"
+  And the booking count for "Social Science" should be displayed as "4"
 
 Scenario: College booking distribution is shown
   Given I am logged in as an administrator
   When I visit the analytics dashboard
   Then I should see a breakdown by college
   And "Chung Chi" should have the highest booking count
-  And the booking count for "Chung Chi" should be displayed as "7"
-  And the booking count for "Shaw" should be displayed as "6"
+  And the booking count for "Chung Chi" should be displayed as "16"
+  And the booking count for "Shaw" should be displayed as "10"
   And the booking count for "United" should be displayed as "4"
-  And the booking count for "New Asia" should be displayed as "4"
+  And the booking count for "New Asia" should be displayed as "5"
 
 Scenario: Top 5 majors by booking count are shown
   Given I am logged in as an administrator

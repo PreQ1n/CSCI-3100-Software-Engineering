@@ -1,21 +1,7 @@
-<style>
-  table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-  th, td { padding: 12px 20px; text-align: left; border-bottom: 1px solid #eee; }
-  th { background-color: #f8f9fa; font-weight: bold; }
+<section class="surface-card" style="padding: 16px;">
+<h1 class="title-ui">Venue List - CUHK Venue Booking System</h1>
 
-  mark {
-    background-color: #fff3cd;
-    color: #856404;
-    padding: 0 2px;
-    border-radius: 2px;
-    font-weight: bold;
-  }
-</style>
-
-
-<h1>Venue List - CUHK Venue Booking System</h1>
-
-<div style="margin: 20px 0;">
+<div style="margin: 14px 0;">
   <%= form_with(url: venues_path, method: :get, 
                 data: {  
                   turbo_frame: "venues_table", 
@@ -31,12 +17,12 @@
                          data: { 
                           action: "input->search-form#search" 
                          },
-                         style: "width: 300px; padding: 8px;" %>
+                         style: "width: 300px; padding: 9px 11px; border: 1px solid #e2e8f0; border-radius: 9px;" %>
     
-      <%= form.button type: :submit, style: "padding: 8px 20px; ..." do %>
+      <%= form.button type: :submit, class: "btn-ui" do %>
         <i class="bi bi-search"></i> Search
       <% end %>      
-      <%= link_to venues_path, style: "margin-left: 10px; color: #666; text-decoration: none; display: flex; align-items: center; gap: 5px;" do %>
+      <%= link_to venues_path, class: "btn-ui" do %>
       <i class="bi bi-arrow-counterclockwise"></i> Clear
       <% end %> 
     </div>
@@ -46,4 +32,5 @@
 <%= render "venues_table", venues_table: @venues_table %>
 
 <br>
-<%= link_to "Add New Venue", new_venue_path, data: { turbo: false } %>
+<%= link_to "Add New Venue", new_venue_path, data: { turbo: false }, class: "btn-ui secondary" %>
+</section>

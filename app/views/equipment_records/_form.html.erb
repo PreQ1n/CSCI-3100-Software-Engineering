@@ -1,8 +1,7 @@
 <%= form_with(model: equipment_record, data: {turbo: false}) do |form| %>
   <% if equipment_record.errors.any? %>
     <div style="color: red">
-      <h2><%= pluralize(equipment_record.errors.count, "error") %> prohibited this new equipment record from being saved:</h2>
-
+      <h2><%= pluralize(equipment_record.errors.count, "error") %> prohibited this booking:</h2>
       <ul>
         <% equipment_record.errors.each do |error| %>
           <li><%= error.full_message %></li>
@@ -13,17 +12,17 @@
 
   <%= form.hidden_field :equipment_id, value: @equipment_record.equipment.id %>
 
-  <div>
-    <%= form.label :date, style: "display: block" %>
-    <%= form.date_field :date %>
+  <div style="margin-bottom: 15px;">
+    <%= form.label :borrow_date, "Borrow Date", style: "display: block; font-weight: bold;" %>
+    <%= form.date_field :borrow_date, min: Date.current.to_s, style: "padding: 8px;" %>
   </div>
 
-  <div>
-    <%= form.label :time, style: "display: block" %>
-    <%= form.time_field :time %>
+  <div style="margin-bottom: 15px;">
+    <%= form.label :expected_return_date, "Expected Return Date", style: "display: block; font-weight: bold;" %>
+    <%= form.date_field :expected_return_date, min: Date.current.to_s, style: "padding: 8px;" %>
   </div>
 
-  <div>
-    <%= form.submit "Book" %>
+  <div style="margin-top: 20px;">
+    <%= form.submit "Book Equipment" %>
   </div>
 <% end %>

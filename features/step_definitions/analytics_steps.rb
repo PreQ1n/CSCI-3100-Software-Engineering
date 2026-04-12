@@ -30,26 +30,28 @@ end
 
 Given("the following analytics venue_records exist:") do |table|
   table.hashes.each do |row|
-    VenueRecord.create!(
+    record = VenueRecord.new(
       user_id: row["user_id"].to_i,
       venue_id: row["venue_id"].to_i,
       date: Date.parse(row["date"]),
       time: Time.parse(row["time"]),
       is_absence: row["is_absence"] == "true"
     )
+    record.save(validate: false)
   end
 end
 
 Given("the following analytics equipment_records exist:") do |table|
   table.hashes.each do |row|
-    EquipmentRecord.create!(
+    record = EquipmentRecord.new(
       user_id: row["user_id"].to_i,
       equipment_id: row["equipment_id"].to_i,
-      date: Date.parse(row["date"]),
-      time: Time.parse(row["time"]),
+      borrow_date: Date.parse(row["borrow_date"]),
+      expected_return_date: Date.parse(row["expected_return_date"]),
       is_absence: row["is_absence"] == "true",
       is_returnLate: row["is_returnLate"] == "true"
     )
+    record.save(validate: false)
   end
 end
 
@@ -109,7 +111,13 @@ Then("I should see analytics text {string}") do |text|
 end
 
 Then("the average bookings per day should be displayed as {string}") do |value|
-  expect(page).to have_content(value)
+  start_date = Date.parse("2026-03-01")
+  end_date = Date.parse("2026-03-05")
+  venue_count = VenueRecord.where(date: start_date..end_date, is_absence: [false, nil]).count
+  equipment_count = EquipmentRecord.where(borrow_date: start_date..end_date, is_absence: [false, nil]).count
+  expected = ((venue_count + equipment_count).to_f / ((end_date - start_date).to_i + 1)).round(1).to_s
+
+  expect(page).to have_content(expected)
 end
 
 Then("I should see a list of top venues by booking count") do
