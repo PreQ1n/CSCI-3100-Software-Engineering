@@ -44,13 +44,23 @@ class BrevoEmail
     send_email(to: user.email, subject: "Booking Confirmation", html: html)
   end
 
-  def self.venue_booking_cancelled(user, venue_record)
-    html = render("venue_booking_cancelled", user: user, venue_record: venue_record)
-    send_email(to: user.email, subject: "Booking Cancellation", html: html)
+  def self.venue_attendance_confirmed(user, venue_record)
+    html = render("venue_attendance_confirmed", user: user, venue_record: venue_record)
+    send_email(to: user.email, subject: "Attendance Confirmation", html: html)
   end
 
-  def self.equipment_booking_cancelled(user, equipment_record)
-    html = render("equipment_booking_cancelled", user: user, equipment_record: equipment_record)
-    send_email(to: user.email, subject: "Booking Cancellation", html: html)
+  def self.equipment_attendance_confirmed(user, equipment_record)
+    html = render("equipment_attendance_confirmed", user: user, equipment_record: equipment_record)
+    send_email(to: user.email, subject: "Attendance Confirmation", html: html)
+  end
+  
+  def self.venue_absence_reminder(user, venue_record)
+    html = render("venue_absence_reminder", user: user, venue_record: venue_record)
+    send_email(to: user.email, subject: "Absence Reminder", html: html)
+  end
+
+  def self.equipment_absence_reminder(user, equipment_record)
+    html = render("equipment_absence_reminder", user: user, equipment_record: equipment_record)
+    send_email(to: user.email, subject: "Absence Reminder", html: html)
   end
 end
