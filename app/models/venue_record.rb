@@ -4,11 +4,8 @@ class VenueRecord < ApplicationRecord
 
   validates :date, presence: true
   validates :time, presence: true
-<<<<<<< HEAD
   validates :time, uniqueness: { scope: [:venue_id, :date],
                                 message: "This timeslot was just booked by someone else. Please choose another." }
-=======
->>>>>>> map-api
 
   def venue_name
     venue&.name

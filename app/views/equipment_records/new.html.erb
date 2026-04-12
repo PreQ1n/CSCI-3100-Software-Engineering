@@ -1,13 +1,9 @@
 <% content_for :title, "New equipment record" %>
 
-<<<<<<< HEAD
-<h1>Book Equipment: <%= @equipment_record.equipment.present? ? @equipment_record.equipment.name : "" %> </h1>
-=======
 <hgroup>
   <h1>Book Equipment: <%= @equipment_record.equipment.present? ? @equipment_record.equipment.name : "No Equipment Found" %> </h1>
   <p>Quantity: <%= @equipment_record.equipment.present? ? @equipment_record.equipment.quantity : "0" %> </p>
 </hgroup>
->>>>>>> map-api
 
 <%= render "form", equipment_record: @equipment_record %>
 
