@@ -1,7 +1,10 @@
 <% content_for :title, "New venue record" %>
 
-<h1>Book Venue: <%= @venue_record.venue.present? ? @venue_record.venue.name : "" %> </h1>
-
+<hgroup>
+  <h1>Book Venue: <%= @venue_record.venue.present? ? @venue_record.venue.name : "No Venue Found" %></h1>
+  <p>Venue Building: <%= @venue_record.venue.present? ? @venue_record.venue.building : "" %><br>
+     Venue Description: <%= @venue_record.venue.present? ? (@venue_record.venue.description == "" ? "No Description" : @venue_record.venue.description ) : "" %></p>
+</hgroup>
 
 <%= render "form", venue_record: @venue_record %>
 

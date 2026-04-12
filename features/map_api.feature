@@ -1,38 +1,39 @@
-Feature: using Google Maps API to generate interactive maps of the venues selected
-
-    As a user booking venues
-    I want to see maps of the venue I booked on the venue page
+Feature: using Google Maps API to generate interactive maps of the venues selected and can to use them to create new venues
 
     Background: booking records have been added to database
 
-        Given the following users exists:
-        |id | email              | password |
-        |1  | student@email.com  | 123      |
+        Given the following venues exists:
+        | name                    | venue_id   | latitude | longitude |
+        | New Asia College        | 1          | 22.42101 | 114.20922 |
+        | Lady Shaw Building      | 2          | 22.41901 | 114.20688 |
+        | Lee Shau Kee Building   | 3          | 22.41974 | 114.20395 |
+        | Tsang Shiu Tim Building | 4          | 22.42052 | 114.20452 |
 
-        And the following venues exists:
-        | name                    | venue_id   | building                | latitude | longitude |
-        | New Asia College        | 1          | Leung Hung Kee Building | 22.42101 | 114.20922 |
-        | Lady Shaw Building      | 2          | LT1                     | 22.41901 | 114.20688 |
-        | Lee Shau Kee Building   | 3          | LT2                     | 22.41974 | 114.20395 |
-        | Tsang Shiu Tim Building | 4          | UCA 104                 | 22.42052 | 114.20452 |
+    @javascript
+    Scenario Outline: user sees maps of corresponding venues on the booking page
+        Given I am logged in as "student@gmail.com" with password "111"
+        And I am on the venue booking page of "<venue_name>"
+        Then I should see a map available
+        And the map is centered on the coordinates of "<venue_name>"
 
-        And the following venue_records exists:
-        | user_id | venue_id | date       | time  |
-        | 1       | 1        | 08-03-2026 | 11:00 |  
-        | 1       | 2        | 09-03-2026 | 12:00 |
-        | 1       | 3        | 10-03-2026 | 14:00 |
-        
-    Scenario: check if maps exist
-        Given I am on the venues page
-        Then I should see a map of "New Asia College" at 22.42101, 114.20922
-        Then I should see a map of "Lady Shaw Building" at 22.41901, 114.20688 
-        Then I should see a map of "New Asia College" at 22.41974, 114.20395
+        Examples:
+        |venue_name|
+        |New Asia College|
+        |Lady Shaw Building|
+        |Lee Shau Kee Building|
+        |Tsang Shiu Tim Building|
 
-    Scenario: create a new venue_record and check if its corresponding map exist
-        Given I am on the venues page
-        When I follow "Add New Venue"
-        And I fill in Name with "Tsang Shuy Tim Building"
-        And I fill in Venue with 4
-        And I click "Create Venue"
-        And I follow "Back to venues"
-        Then I should see a map of "Tsang Shiu Tim Building" at 22.42052, 114.20452
+    @javascript
+    Scenario Outline: on the create venue page, admin inputs venue names and maps of corresponding locations are shown
+        Given I am logged in as "admin@example.com" with password "password123"
+        And I am on the create new venues page
+        Then I should see a map available
+        And the map is centered on the default coordinates
+        Then I search for "<search_term>" in the name field
+        Then the map is centered on lat: <lat> long: <long>
+
+        Examples:
+        |search_term|lat|long|
+        |cuhk medical centre|22.4136093|114.2113817|
+        |new asia|22.420989|114.2089572|
+        |chung chi|22.4159812|114.2070044|
