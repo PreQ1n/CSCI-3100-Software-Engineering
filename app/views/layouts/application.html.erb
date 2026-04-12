@@ -49,6 +49,12 @@
     <main>
       <%= yield %>
     </main>
+
+    <% flash.each do |type, message| %>
+    <div class="flash <%= type %>" data-turbo-temporary>
+      <%= message %>
+    </div>
+    <% end %>
     
     <script>
     <% if flash[:notice] %>

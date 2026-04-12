@@ -28,6 +28,7 @@ class VenueRecordsController < ApplicationController
     @venue_record = VenueRecord.new(venue_record_params)
     @venue_record.user_id = current_user.id
     @venue_record.venue = Venue.find_by(venue_id: params[:venue_record][:venue_id])
+<<<<<<< HEAD
 
     begin
       if @venue_record.save
@@ -39,6 +40,18 @@ class VenueRecordsController < ApplicationController
     rescue ActiveRecord::RecordNotUnique
       @venue_record.errors.add(:time, "This slot was just taken. Please pick another time.")
       render :new, status: :unprocessable_entity
+=======
+    
+
+    respond_to do |format|
+      if @venue_record.save
+        format.html { redirect_to root_path, notice: "Venue was successfully booked." }
+        format.json { render :show, status: :created, location: @venue_record }
+      else
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: @venue_record.errors, status: :unprocessable_entity }
+      end
+>>>>>>> map-api
     end
   end
 
@@ -65,6 +78,7 @@ class VenueRecordsController < ApplicationController
     end
   end
 
+<<<<<<< HEAD
   def booked_slots
     booked = VenueRecord
       .where(venue_id: params[:venue_id], date: params[:date])
@@ -73,6 +87,8 @@ class VenueRecordsController < ApplicationController
     render json: booked
   end
 
+=======
+>>>>>>> map-api
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_venue_record
