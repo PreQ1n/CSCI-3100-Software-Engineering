@@ -1,79 +1,106 @@
 <h1>Confirmation</h1>
 
-<h2>Venue Booking Confirmation</h2>
-<% if @venue_records.any? %>
-    <table class="table">
-        <thead>
-            <tr>
-                <th> Venue_name </th>
-                <th> Time </th>
-                <th> Confirm </th>
-            </tr>
-        </thead>
-        <tbody>
-            <% @venue_records.each do |record| %>
+<section class="confirmation-section">
+    <h2>Venue Booking Confirmation</h2>
+    <% if @venue_records.any? %>
+        <table class="table">
+            <thead>
                 <tr>
-                    <td><%= record.venue_name %> </td>
-                    <td><%= record.time.strftime("%H:%M") %> </td>
-                    <% if !record.is_absence %>
-                        <td> Confirmed! </td>
-                    <% else %>
-                        <td> <%= button_to "✅Press to Confirm", confirm_path(type: "venue", id: record.id), method: :post %> </td>
-                    <% end %>
+                    <th> Venue_name </th>
+                    <th> Time </th>
+                    <th> Confirm </th>
                 </tr>
-            <% end %>
-        </tbody>    
-    </table>
-<% end %>
+            </thead>
+            <tbody>
+                <% @venue_records.each do |record| %>
+                    <tr>
+                        <td><%= record.venue_name %> </td>
+                        <td><%= record.time.strftime("%H:%M") %> </td>
+                        <% if !record.is_absence %>
+                            <td> Confirmed! </td>
+                        <% else %>
+                            <td> <%= button_to "✅Press to Confirm", confirm_path(type: "venue", id: record.id), method: :post %> </td>
+                        <% end %>
+                    </tr>
+                <% end %>
+            </tbody>
+        </table>
+    <% else %>
+        <p><em>No venue records pending confirmation</em></p>
+    <% end %>
+</section>
 
-<h2>Equipment Booking Confirmation</h2>
+<section class="confirmation-section">
+    <h2>Equipment Booking Confirmation</h2>
 
-<h3>Pending Pickup</h3>
-<% if @equipment_pending_borrow.any? %>
-    <table class="table">
-        <thead>
-            <tr>
-                <th> Equipment_name </th>
-                <th> Borrow Date </th>
-                <th> Expected Return Date </th>
-                <th> Confirm </th>
-            </tr>
-        </thead>
-        <tbody>
-            <% @equipment_pending_borrow.each do |record| %>
+    <h3>Pending Pickup</h3>
+    <% if @equipment_pending_borrow.any? %>
+        <table class="table">
+            <thead>
                 <tr>
-                    <td><%= record.equipment_name %> </td>
-                    <td><%= record.borrow_date.strftime("%Y-%m-%d") %> </td>
-                    <td><%= record.expected_return_date.strftime("%Y-%m-%d") %> </td>
-                    <td> <%= button_to "✅Pick Up Equipment", confirm_path(type: "equipment", id: record.id, action_type: "borrow"), method: :post %> </td>
+                    <th> Equipment_name </th>
+                    <th> Borrow Date </th>
+                    <th> Expected Return Date </th>
+                    <th> Confirm </th>
                 </tr>
-            <% end %>
-        </tbody>    
-    </table>
-<% else %>
-    <p><em>No equipment pending pickup</em></p>
-<% end %>
+            </thead>
+            <tbody>
+                <% @equipment_pending_borrow.each do |record| %>
+                    <tr>
+                        <td><%= record.equipment_name %> </td>
+                        <td><%= record.borrow_date.strftime("%Y-%m-%d") %> </td>
+                        <td><%= record.expected_return_date.strftime("%Y-%m-%d") %> </td>
+                        <td> <%= button_to "✅Pick Up Equipment", confirm_path(type: "equipment", id: record.id, action_type: "borrow"), method: :post %> </td>
+                    </tr>
+                <% end %>
+            </tbody>
+        </table>
+    <% else %>
+        <p><em>No equipment pending pickup</em></p>
+    <% end %>
 
-<h3>Pending Return</h3>
-<% if @equipment_pending_return.any? %>
-    <table class="table">
-        <thead>
-            <tr>
-                <th> Equipment_name </th>
-                <th> Expected Return Date </th>
-                <th> Confirm </th>
-            </tr>
-        </thead>
-        <tbody>
-            <% @equipment_pending_return.each do |record| %>
+    <h3>Pending Return</h3>
+    <% if @equipment_pending_return.any? %>
+        <table class="table">
+            <thead>
                 <tr>
-                    <td><%= record.equipment_name %> </td>
-                    <td><%= record.expected_return_date.strftime("%Y-%m-%d") %> </td>
-                    <td> <%= button_to "✅Return Equipment", confirm_path(type: "equipment", id: record.id, action_type: "return"), method: :post %> </td>
+                    <th> Equipment_name </th>
+                    <th> Expected Return Date </th>
+                    <th> Confirm </th>
                 </tr>
-            <% end %>
-        </tbody>    
-    </table>
-<% else %>
-    <p><em>No equipment pending return</em></p>
-<% end %>
+            </thead>
+            <tbody>
+                <% @equipment_pending_return.each do |record| %>
+                    <tr>
+                        <td><%= record.equipment_name %> </td>
+                        <td><%= record.expected_return_date.strftime("%Y-%m-%d") %> </td>
+                        <td> <%= button_to "✅Return Equipment", confirm_path(type: "equipment", id: record.id, action_type: "return"), method: :post %> </td>
+                    </tr>
+                <% end %>
+            </tbody>
+        </table>
+    <% else %>
+        <p><em>No equipment pending return</em></p>
+    <% end %>
+</section>
+
+<style>
+  .confirmation-section {
+    margin: 18px 0;
+    padding: 14px 16px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: #fff;
+  }
+
+  .confirmation-section h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #000;
+  }
+
+  .confirmation-section h3 {
+    margin-top: 14px;
+  }
+</style>

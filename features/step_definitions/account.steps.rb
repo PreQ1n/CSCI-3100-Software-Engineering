@@ -1,6 +1,5 @@
 # features/step_definitions/account.steps.rb
 
-# 輔助方法
 def parse_date(date_string)
     raise ArgumentError, "date string is blank" if date_string.nil? || date_string.strip.empty?
     day, month, year = date_string.split('-')
@@ -84,7 +83,7 @@ Given("there is a {string} link") do |link|
 end
 
 When("I have a new confirmation") do
-    @venue = Venue.create!(name: "Test Venue")
+    @venue = Venue.create!(name: "Test Venue", latitude: 22.4001, longitude: 114.2001)
     @test_time = Time.current + 2.hours
 
     record = VenueRecord.new(
@@ -148,7 +147,7 @@ Given("I have the following booked") do |table|
             )
             record.save(validate: false)
         elsif row["Date"] && row["Time"]
-            current_venue = Venue.create!(name: row["Name"])
+            current_venue = Venue.create!(name: row["Name"], latitude: 22.4002, longitude: 114.2002)
             record = VenueRecord.new(
                 user_id: @current_user.id,
                 venue_id: current_venue.id,

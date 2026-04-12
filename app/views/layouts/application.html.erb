@@ -50,28 +50,18 @@
         <%= link_to "Login", login_path, class: "btn-ui" %>
       <% end %>
     </header>
+
+    <div class="flash-stack" aria-live="polite" aria-atomic="true">
+      <% flash.each do |type, message| %>
+        <div class="flash flash-<%= type %>" data-turbo-temporary>
+          <%= message %>
+        </div>
+      <% end %>
+    </div>
     
     <main>
       <%= yield %>
     </main>
-
-    <% flash.each do |type, message| %>
-    <div class="flash <%= type %>" data-turbo-temporary>
-      <%= message %>
-    </div>
-    <% end %>
-    
-    <script>
-    <% if flash[:notice] %>
-      alert("<%= j flash[:notice] %>");
-      <% flash.delete(:notice) %>
-    <% end %>
-
-    <% if flash[:alert] %>
-      alert("<%= j flash[:alert] %>");
-      <% flash.delete(:alert) %>
-    <% end %>
-    </script>
 
     <style>
       .top-nav {
@@ -126,6 +116,57 @@
       .top-nav form {
         margin: 0;
       }
+
+      .flash-stack {
+        position: fixed;
+        top: 18px;
+        right: 18px;
+        z-index: 1200;
+        display: grid;
+        gap: 10px;
+        width: min(360px, 90vw);
+      }
+
+      .flash {
+        border-radius: 10px;
+        padding: 10px 12px;
+        border: 1px solid #e2e8f0;
+        background: #ffffff;
+        color: #0f172a;
+        box-shadow: 0 8px 20px rgba(2, 6, 23, 0.12);
+        opacity: 1;
+        transform: translateY(0);
+        transition: opacity 320ms ease, transform 320ms ease;
+      }
+
+      .flash.fade-out {
+        opacity: 0;
+        transform: translateY(-6px);
+      }
+
+      .flash-notice {
+        border-color: #bbf7d0;
+        background: #f0fdf4;
+      }
+
+      .flash-alert,
+      .flash-error {
+        border-color: #fecaca;
+        background: #fef2f2;
+      }
     </style>
+
+    <script>
+      document.addEventListener("turbo:load", function () {
+        document.querySelectorAll(".flash").forEach(function (el) {
+          setTimeout(function () {
+            el.classList.add("fade-out");
+            setTimeout(function () {
+              el.remove();
+            }, 320);
+          }, 2800);
+        });
+      });
+    </script>
   </body>
 </html>

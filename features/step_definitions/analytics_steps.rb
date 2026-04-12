@@ -1,6 +1,11 @@
 Given("the following analytics venues exist:") do |table|
-  table.hashes.each do |row|
-    Venue.create!(id: row["id"].to_i, name: row["name"])
+  table.hashes.each_with_index do |row, index|
+    Venue.create!(
+      id: row["id"].to_i,
+      name: row["name"],
+      latitude: 22.401 + index * 0.001,
+      longitude: 114.201 + index * 0.001
+    )
   end
 end
 

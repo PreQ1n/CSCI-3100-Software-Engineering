@@ -1,18 +1,68 @@
 <div id="<%= dom_id venue_record %>" class="venue-record-item">
-  <p>
-    <strong>Date:</strong>
-    <%= venue_record.date.strftime("%Y-%m-%d") %>
-  </p>
-  <p>
-    <strong>Venue:</strong>
-    <%= venue_record.venue_name %>
-  </p>
-  <p>
-    <strong>Timeslot:</strong>
-    <%= venue_record.time.strftime("%H:%M") %>
-  </p>
+  <div class="venue-record-grid">
+    <p>
+      <strong>Date:</strong>
+      <span><%= venue_record.date.strftime("%Y-%m-%d") %></span>
+    </p>
+    <p>
+      <strong>Venue:</strong>
+      <span><%= venue_record.venue_name %></span>
+    </p>
+    <p>
+      <strong>Timeslot:</strong>
+      <span><%= venue_record.time.strftime("%H:%M") %></span>
+    </p>
+  </div>
 
-  <p>
-    <%= link_to "Cancel Booking", venue_record, data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to cancel this booking?" } %>
+  <p class="venue-record-actions">
+    <%= link_to "Cancel Booking", venue_record, class: "cancel-booking-link", data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to cancel this booking?" } %>
   </p>
 </div>
+
+<style>
+  .venue-record-item {
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    background: #fff;
+    padding: 14px 16px;
+    box-shadow: 0 6px 14px rgba(2, 6, 23, 0.04);
+  }
+
+  .venue-record-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px 14px;
+  }
+
+  .venue-record-grid p {
+    margin: 0;
+    color: #334155;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .venue-record-grid strong {
+    color: #0f172a;
+  }
+
+  .venue-record-actions {
+    margin: 12px 0 0;
+  }
+
+  .cancel-booking-link {
+    text-decoration: none;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+    background: #fff1f2;
+    border-radius: 10px;
+    padding: 6px 10px;
+    font-weight: 600;
+  }
+
+  @media (max-width: 760px) {
+    .venue-record-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

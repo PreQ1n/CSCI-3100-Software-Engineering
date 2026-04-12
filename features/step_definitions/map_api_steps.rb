@@ -36,16 +36,14 @@ Then('I should see a map of {string} at {float}, {float}') do |venue_name, lat, 
         expect(venue.longitude.to_f).to eq(long)
 end
 
-Then(/^I should see a map of (.+) at (\d+\.\d+), (\d+\.\d+)$/) do |venue_name, lat, long|
-    step 'I should see a map of "' + venue_name + '" at ' + lat + ', ' + long
-end
-
 When('I click {string}') do |button_name|
   click_button button_name
 end
 
 When('I fill in Name with {string}') do |name_value|
-        if page.has_field?("venue_name")
+        if page.has_field?("search-input")
+            fill_in("search-input", with: name_value)
+        elsif page.has_field?("venue_name")
             fill_in("venue_name", with: name_value)
         else
             fill_in("Name", with: name_value)

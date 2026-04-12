@@ -53,13 +53,11 @@ When("I fill in the {string} field with {string}") do |field, value|
 end
 
 When("I click the {string} button") do |button|
-    @alert_message = accept_alert do
-        click_button(button)
-  end
+    click_button(button)
 end
 
 Then("I should see message {string}") do |msg|
-    expect(@alert_message).to eq(msg)
+    expect(page).to have_content(msg)
 end
 
 Then("I should on the main page") do

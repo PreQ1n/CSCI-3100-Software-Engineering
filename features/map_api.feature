@@ -35,4 +35,4 @@ Feature: using Google Maps API to generate interactive maps of the venues select
         And I fill in Venue with 4
         And I press Create Venue
         And I press Back to venues
-        Then I should see a map of Tsang Shiu Tim Building at 22.42052, 114.20452
+        Then I should see a map of "Tsang Shiu Tim Building" at 22.42052, 114.20452

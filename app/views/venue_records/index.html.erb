@@ -1,13 +1,71 @@
-<p style="color: green"><%= notice %></p>
-
 <% content_for :title, "Venue records" %>
 
-<h1>My Venue Bookings</h1>
+<section class="venue-records-page">
+  <header class="venue-records-header">
+    <h1>My Venue Bookings</h1>
+    <%= link_to "Book New Venue", venues_path, class: "venue-records-new-link" %>
+  </header>
 
-<div id="venue_records">
-  <% @venue_records.each do |venue_record| %>
-    <%= render venue_record %>
-  <% end %>
-</div>
+  <div id="venue_records" class="venue-records-list">
+    <% if @venue_records.any? %>
+      <% @venue_records.each do |venue_record| %>
+        <%= render venue_record %>
+      <% end %>
+    <% else %>
+      <div class="venue-record-empty">
+        <p>No venue bookings yet.</p>
+      </div>
+    <% end %>
+  </div>
+</section>
 
-<%= link_to "Book New Venue", venues_path %>
+<style>
+  .venue-records-page {
+    width: min(920px, 94vw);
+    margin: 22px auto;
+  }
+
+  .venue-records-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .venue-records-header h1 {
+    margin: 0;
+    font-size: 1.6rem;
+    letter-spacing: -0.01em;
+  }
+
+  .venue-records-new-link {
+    text-decoration: none;
+    border: 1px solid #0f172a;
+    background: #0f172a;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-weight: 600;
+  }
+
+  .venue-records-list {
+    display: grid;
+    gap: 12px;
+  }
+
+  .venue-record-empty {
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    background: #fff;
+    padding: 16px;
+    color: #475569;
+  }
+
+  @media (max-width: 640px) {
+    .venue-records-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>
