@@ -70,7 +70,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_11_171101) do
     t.text "description"
     t.decimal "latitude", precision: 10, scale: 6
     t.decimal "longitude", precision: 10, scale: 6
-    t.string "name", null: false
+    t.string "name"
     t.datetime "updated_at", null: false
     t.integer "venue_id"
     t.index ["name"], name: "index_venues_on_name"

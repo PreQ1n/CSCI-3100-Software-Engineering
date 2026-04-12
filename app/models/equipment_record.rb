@@ -3,7 +3,8 @@ class EquipmentRecord < ApplicationRecord
   belongs_to :equipment
 
   validates :date, presence: true
-  validates :time, presence: true
+  validates :time, presence: true, uniqueness: { scope: [:equipment_id, :date],
+                                message: "This timeslot was just booked by someone else. Please choose another." }
 
   def equipment_name
     equipment&.name
