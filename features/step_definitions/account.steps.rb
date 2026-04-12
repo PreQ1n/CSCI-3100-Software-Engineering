@@ -89,9 +89,9 @@ When("I have a new confirmation") do
     record = VenueRecord.new(
         user_id: @current_user.id,
         venue_id: @venue.id,
-        date: Date.today,
+        date: Date.current,
         time: @test_time,
-        is_absence: nil
+        is_absence: true
     )
     record.save(validate: false)
     @confirmation = record

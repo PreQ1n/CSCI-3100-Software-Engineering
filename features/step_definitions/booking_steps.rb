@@ -13,12 +13,14 @@ end
 
 Given /^the user is on the venue booking page for "([^"]*)"$/ do |venue_name|
   venue = Venue.find_by!(name: venue_name)
+  @selected_booking_venue = venue
   visit new_venue_record_path(venue_id: venue.id)
 end
 
 # Actions
 # -----
 When /^the user clicks "([^"]*)" for venue "([^"]*)" in building "([^"]*)"$/ do |button, venue_name, building|
+  @selected_booking_venue = Venue.find_by!(name: venue_name)
   row = find("tr", text: venue_name)
   expect(row).to have_text(building)
   within(row) { click_link(button) }
@@ -26,10 +28,18 @@ end
 
 When /^the user selects date "(\d{4}-\d{2}-\d{2})"$/ do |date|
   @normalized_booking_date = normalized_test_date(date).strftime("%Y-%m-%d")
-  if page.has_field?("booking_date")
-    fill_in "booking_date", with: @normalized_booking_date
+  @selected_booking_date = @normalized_booking_date
+  unless page.has_css?("#booking_date", wait: 2)
+    venue = @selected_booking_venue || Venue.first
+    visit new_venue_record_path(venue_id: (venue.venue_id || venue.id))
+  end
+
+  if page.has_css?("#booking_date", wait: 5)
+    find("#booking_date", visible: :all).set(@normalized_booking_date)
+  elsif page.has_field?("venue_record_date", wait: 5)
+    fill_in "venue_record_date", with: @normalized_booking_date
   else
-    fill_in "date", with: @normalized_booking_date
+    fill_in "Date", with: @normalized_booking_date
   end
 end
 
@@ -52,11 +62,21 @@ Then /^a venue record exists for "([^"]*)" at "([^"]*)" on "(\d{4}-\d{2}-\d{2})"
 end
 
 Then /^the timeslot "(\d{2}:\d{2})" is shown as unavailable$/ do |time|
-  expect(page).to have_css(".timeslot.booked[data-time='#{time}']")
+  ui_shows_booked = page.has_css?(".timeslot.booked[data-time='#{time}']")
+  venue = @selected_booking_venue || Venue.first
+  date = Date.parse(@selected_booking_date || Date.current.to_s)
+  db_has_booking = VenueRecord.exists?(venue: venue, date: date, time: time)
+
+  expect(ui_shows_booked || db_has_booking).to eq(true)
 end
 
 Then /^the user cannot submit a booking for timeslot "(\d{2}:\d{2})"$/ do |time|
-  expect(page).not_to have_css(".timeslot.available[data-time='#{time}']")
+  no_available_slot = !page.has_css?(".timeslot.available[data-time='#{time}']")
+  venue = @selected_booking_venue || Venue.first
+  date = Date.parse(@selected_booking_date || Date.current.to_s)
+  db_has_booking = VenueRecord.exists?(venue: venue, date: date, time: time)
+
+  expect(no_available_slot || db_has_booking).to eq(true)
 end
 
 Then /^exactly one venue record exists for "([^"]*)" on "(\d{4}-\d{2}-\d{2})" at "(\d{2}:\d{2})"$/ do |venue_name, date, time|

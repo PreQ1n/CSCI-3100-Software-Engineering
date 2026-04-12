@@ -1,7 +1,19 @@
 Given('the following users exists:') do |table|
+    first_user = nil
     table.hashes.each do |row|
-        User.create!(row)
+        user = User.create!(
+            id: row["id"],
+            email: row["email"],
+            password: row["password"],
+            admin: true
+        )
+        first_user ||= user
     end
+
+    visit(login_path)
+    fill_in("Email", with: first_user.email)
+    fill_in("Password", with: table.hashes.first["password"])
+    click_button("Login")
 end
 
 Given('the following venues exists:') do |table|
@@ -41,9 +53,9 @@ When('I click {string}') do |button_name|
 end
 
 When('I fill in Name with {string}') do |name_value|
-        if page.has_field?("search-input")
-            fill_in("search-input", with: name_value)
-        elsif page.has_field?("venue_name")
+        if page.has_css?("#search-input", wait: 5)
+            find("#search-input", visible: :all).set(name_value)
+        elsif page.has_field?("venue_name", wait: 2)
             fill_in("venue_name", with: name_value)
         else
             fill_in("Name", with: name_value)

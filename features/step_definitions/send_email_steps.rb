@@ -59,6 +59,10 @@ end
 # Authentication / Navigation Steps
 Given(/^a user is logged in as "([^"]*)"$/) do |email|
   @current_user = User.find_by!(email: email)
+  visit(login_path)
+  fill_in("Email", with: email)
+  fill_in("Password", with: "password123")
+  click_button("Login")
 end
 
 Given(/^the user is on the venue booking confirmation page$/) do
@@ -122,14 +126,14 @@ When(/^the is_absence value of venue record is updated as (true|false) for "([^"
   user = User.find_by!(email: email)
   venue = Venue.find_by!(name: venue_name)
 
-  @venue_record = VenueRecord.new(
+  @venue_record = VenueRecord.find_or_initialize_by(
     user: user,
     venue: venue,
     date: Date.parse(date),
-    time: Time.zone.parse(time),
-    is_absence: nil
+    time: Time.zone.parse(time)
   )
-  @venue_record.save(validate: false)
+  @venue_record.is_absence = nil if @venue_record.new_record?
+  @venue_record.save(validate: false) if @venue_record.new_record?
   @venue_record.update_column(:is_absence, value == "true")
 
   if @venue_record.is_absence
@@ -144,16 +148,18 @@ When(/^the is_absence value of equipment record is updated as (true|false) for "
   equipment = Equipment.find_by!(name: equipment_name)
   parsed_date = Date.parse(date)
 
-  @equipment_record = EquipmentRecord.new(
+  @equipment_record = EquipmentRecord.find_or_initialize_by(
     user: user,
     equipment: equipment,
     borrow_date: parsed_date,
-    expected_return_date: parsed_date + 1,
     date: parsed_date,
-    time: Time.zone.parse(time),
-    is_absence: nil
+    time: Time.zone.parse(time)
   )
-  @equipment_record.save(validate: false)
+  if @equipment_record.new_record?
+    @equipment_record.expected_return_date = parsed_date + 1
+    @equipment_record.is_absence = nil
+    @equipment_record.save(validate: false)
+  end
   @equipment_record.update_column(:is_absence, value == "true")
 
   if @equipment_record.is_absence

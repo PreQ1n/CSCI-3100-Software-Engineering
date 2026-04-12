@@ -12,7 +12,8 @@ class VenueRecordsController < ApplicationController
       user_authentication
       return
     end
-    @venue_record = VenueRecord.new(venue: Venue.find_by(venue_id: params[:venue_id]))
+    venue = Venue.find_by(venue_id: params[:venue_id]) || Venue.find_by(id: params[:venue_id])
+    @venue_record = VenueRecord.new(venue: venue)
   end
 
   # GET /venue_records/1/edit
@@ -23,7 +24,8 @@ class VenueRecordsController < ApplicationController
   def create
     @venue_record = VenueRecord.new(venue_record_params)
     @venue_record.user_id = current_user.id
-    @venue_record.venue = Venue.find_by(venue_id: params[:venue_record][:venue_id])
+    venue_id_param = params[:venue_record][:venue_id]
+    @venue_record.venue = Venue.find_by(venue_id: venue_id_param) || Venue.find_by(id: venue_id_param)
 
     begin
       if @venue_record.save
