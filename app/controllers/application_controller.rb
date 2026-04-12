@@ -22,7 +22,15 @@ class ApplicationController < ActionController::Base
 
   def admin_authentication
     if !current_user&.admin?
-      redirect_to root_path, alert: "Access denied."
+      # Redirect to the appropriate list page based on controller
+      case controller_name
+      when 'equipment', 'equipments'
+        redirect_to equipment_index_path, alert: "Access denied. Only administrators can manage equipment."
+      when 'venues'
+        redirect_to venues_path, alert: "Access denied. Only administrators can manage venues."
+      else
+        redirect_to root_path, alert: "Access denied."
+      end
     end
   end
   

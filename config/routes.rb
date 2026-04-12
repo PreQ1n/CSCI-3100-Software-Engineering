@@ -1,24 +1,25 @@
 Rails.application.routes.draw do
   resources :equipment
-  resources :equipment_records
-  resources :venue_records do
+  resources :equipment_records do
+    collection do
+      # GET /equipment_records/booked_slots?equipment_id=1&date=2026-04-11
+      get :booked_slots
+    end
+  end
+  resources :venue_records, except: [:show] do
     collection do
       # GET /venue_records/booked_slots?venue_id=1&date=2026-04-11
       get :booked_slots
     end
   end
   # resources :cuhk_equipments
-  resources :venue_records
   root "pages#hello"
   resources :venues
-  #resources :cuhk_equipments
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "/venues", to: "venues#index"
-  # get "/cuhk_equipments", to: "cuhk_equipments#index"
-
   # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker

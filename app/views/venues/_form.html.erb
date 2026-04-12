@@ -12,7 +12,7 @@
 
 <%= form_with(model: venue, data: {turbo: false}) do |form| %>
   <% if venue.errors.any? %>
-    <div style="color: red">
+    <div class="venue-form-errors">
       <h2><%= pluralize(venue.errors.count, "error") %> prohibited this venue from being saved:</h2>
 
       <ul>
@@ -23,55 +23,160 @@
     </div>
   <% end %>
 
-  <div style="display: flex;">
-    <div>
-      <div>
-        <%= form.label :name, style: "display: block" %>
+  <div class="venue-form-layout">
+    <div class="venue-form-fields">
+      <div class="field-row">
+        <%= form.label :name %>
         <%= form.text_field :name, id: "search-input", placeholder: "Search for a building..." %>
       </div>
 
-      <div>
-        <%= form.label :building, style: "display: block" %>
+      <div class="field-row">
+        <%= form.label :building %>
         <%= form.text_field :building, id: "venue_building" %>
       </div>
 
-      <div>
-        <%= form.label :latitude, style: "display: block" %>
+      <div class="field-row">
+        <%= form.label :latitude %>
         <%= form.number_field :latitude, id:"latitude", step: "any" %>
       </div>
 
-      <div>
-        <%= form.label :longitude, style: "display: block" %>
+      <div class="field-row">
+        <%= form.label :longitude %>
         <%= form.number_field :longitude, id:"longitude", step: "any" %>
       </div>
 
-      <div>
-        <%= form.label :description, style: "display: block" %>
+      <div class="field-row">
+        <%= form.label :description %>
         <%= form.textarea :description %>
       </div>
 
-      <div>
+      <div class="field-row">
         <%= form.submit %>
       </div>
     </div>
 
-    <div id="map" style="width: 50%; height: 50vh; padding: 20px;">
-      <gmp-map map-id="MAP_ID"></gmp-map>
+    <div class="venue-map-panel">
+      <div id="map" class="venue-map-canvas"></div>
     </div>
   </div>
+
+  <style>
+    .venue-form-layout {
+      display: grid;
+      grid-template-columns: minmax(320px, 1fr) minmax(340px, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .venue-form-fields {
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      background: #ffffff;
+      padding: 14px;
+    }
+
+    .field-row {
+      margin-bottom: 12px;
+    }
+
+    .venue-form-fields label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #0f172a;
+    }
+
+    .venue-form-fields input,
+    .venue-form-fields textarea {
+      width: 100%;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 8px 10px;
+      background: #fff;
+    }
+
+    .venue-form-fields textarea {
+      min-height: 92px;
+      resize: vertical;
+    }
+
+    .venue-form-fields input[type="submit"] {
+      width: auto;
+      border: 1px solid #0f172a;
+      background: #0f172a;
+      color: #fff;
+      font-weight: 600;
+      padding: 9px 14px;
+      cursor: pointer;
+    }
+
+    .venue-map-panel {
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      background: #ffffff;
+      padding: 12px;
+    }
+
+    .venue-map-canvas {
+      width: 100%;
+      height: 52vh;
+      min-height: 360px;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .venue-form-errors {
+      border: 1px solid #fecaca;
+      background: #fef2f2;
+      color: #991b1b;
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 12px;
+    }
+
+    @media (max-width: 920px) {
+      .venue-form-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .venue-map-canvas {
+        height: 44vh;
+        min-height: 300px;
+      }
+    }
+  </style>
   
   <script>
     let map;
-    let AdvancedMarkerElement;
-    let center =  { lat: 22.3565, lng: 114.1363 }; // default coords
-    let selectedPlace;
+    let marker;
+
+    const latInput = document.getElementById("latitude");
+    const lngInput = document.getElementById("longitude");
+
+    const initialLat = parseFloat(latInput.value);
+    const initialLng = parseFloat(lngInput.value);
+    let center = (!Number.isNaN(initialLat) && !Number.isNaN(initialLng))
+      ? { lat: initialLat, lng: initialLng }
+      : { lat: 22.3565, lng: 114.1363 }; // default CUHK area
+
+    function updateLatLngFields(lat, lng) {
+      latInput.value = lat.toFixed(6);
+      lngInput.value = lng.toFixed(6);
+    }
+
+    function setMarker(position) {
+      if (marker) {
+        marker.setPosition(position);
+      } else {
+        marker = new google.maps.Marker({ map: map, position: position });
+      }
+    }
     
     async function initMap() {
       if (map) return;
 
       const { Map, RenderingType } = await google.maps.importLibrary("maps");
       const { Autocomplete } = await google.maps.importLibrary("places");
-      ({ AdvancedMarkerElement } = await google.maps.importLibrary("marker"));
 
       window.map = new Map(document.getElementById("map"), {
         center: center,
@@ -80,6 +185,17 @@
         mapId: "MAP_ID",
       });
       map = window.map;
+
+      // Map click -> auto-fill coordinates.
+      map.addListener("click", function(event) {
+        const lat = event.latLng.lat();
+        const lng = event.latLng.lng();
+        const clicked = { lat: lat, lng: lng };
+
+        center = clicked;
+        setMarker(clicked);
+        updateLatLngFields(lat, lng);
+      });
       
       const autoComplete = new Autocomplete(
         document.getElementById("search-input"),
@@ -98,26 +214,25 @@
 
       autoComplete.addListener("place_changed", function() {
         const place = autoComplete.getPlace();
-        selectedPlace = {
+        if (!place || !place.geometry || !place.geometry.location) return;
+
+        const selectedPlace = {
           name: place.name,
-          location: place.geometry.location,
+          location: place.geometry.location
         };
       
         document.getElementById("venue_building").value = selectedPlace.name;
-        document.getElementById("latitude").value = selectedPlace.location.lat();
-        document.getElementById("longitude").value = selectedPlace.location.lng();
+        updateLatLngFields(selectedPlace.location.lat(), selectedPlace.location.lng());
         
         center = selectedPlace.location;
         map.setCenter(center);
-        addMarker();
+        setMarker(center);
       });
-    }
 
-    async function addMarker() {
-      const marker = new AdvancedMarkerElement({
-        map,
-        position: center,
-      });
+      // Show existing marker on edit page when coordinates already exist.
+      if (!Number.isNaN(initialLat) && !Number.isNaN(initialLng)) {
+        setMarker(center);
+      }
     }
 
     initMap();

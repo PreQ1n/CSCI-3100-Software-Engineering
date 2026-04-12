@@ -27,16 +27,18 @@ class EquipmentRecordsController < ApplicationController
   def create
     @equipment_record = EquipmentRecord.new(equipment_record_params)
     @equipment_record.user_id = current_user.id
-    @equipment_record.equipment = Equipment.find_by(id: params[:equipment_record][:equipment_id])
+    @equipment_record.status = "Pending Borrow"
 
-    respond_to do |format|
-      if @equipment_record.save
-        format.html { redirect_to root_path, notice: "Equipment was successfully booked." }
-        format.json { render :show, status: :created, location: @equipment_record }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @equipment_record.errors, status: :unprocessable_entity }
-      end
+    if @equipment_record.save
+      # Decrement quantity immediately when booking
+      @equipment_record.equipment.decrement!(:quantity)
+      
+      flash[:notice] = "Equipment booked successfully. Please confirm when you pick it up."
+      redirect_to confirmation_path, allow_other_host: false
+    else
+      @equipment_record.equipment = Equipment.find(equipment_record_params[:equipment_id])
+      flash.now[:alert] = @equipment_record.errors.full_messages.join(", ")
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -64,14 +66,12 @@ class EquipmentRecordsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_equipment_record
-      @equipment_record = EquipmentRecord.find(params.expect(:id))
-    end
 
-    # Only allow a list of trusted parameters through.
-    def equipment_record_params
-      params.fetch(:equipment_record, {})
-      params.require(:equipment_record).permit(:user_id, :equipment_id, :date, :time)
-    end
+  def set_equipment_record
+    @equipment_record = EquipmentRecord.find(params[:id])
+  end
+
+  def equipment_record_params
+    params.require(:equipment_record).permit(:equipment_id, :borrow_date, :expected_return_date)
+  end
 end

@@ -1,14 +1,59 @@
-<!-- Navigation Bar -->
-  <nav style="background-color: #333; padding: 15px; margin-bottom: 20px;">
-    <div style="display: flex; gap: 20px; align-items: center;">
-      <%= link_to "Venues", venues_path, style: "color: white; text-decoration: none;" %>
-      <%= link_to "Equipments", equipment_index_path, style: "color: white; text-decoration: none;" %>
+<section class="home-hero surface-card">
+  <h1>CUHK Venue & Equipment Booking SaaS</h1>
+  <p>Fast venue and equipment booking system.</p>
+</section>
+
+<section class="home-actions surface-card">
+  <div class="home-actions-row">
+    <%= link_to "Venues", venues_path, class: "btn-ui" %>
+    <%= link_to "Equipments", equipment_index_path, class: "btn-ui" %>
+    <%= link_to "Confirmation", confirmation_path, class: "btn-ui" if logged_in? %>
+    <%= link_to "Edit Venue record", venue_records_path, class: "btn-ui" if logged_in? %>
+  </div>
+
+  <% if current_user&.admin? %>
+    <div class="home-actions-row second-line">
+      <%= link_to "Create New Venue", new_venue_path, data: { turbo: false }, class: "btn-ui secondary" %>
+      <%= link_to "Create New Equipment", new_equipment_path, data: { turbo: false }, class: "btn-ui secondary" %>
     </div>
-  </nav>
+  <% end %>
+</section>
 
-  <%= yield %>
+<style>
+  .home-hero {
+    margin: 18px auto 12px;
+    max-width: 860px;
+    text-align: center;
+    padding: 26px 16px;
+  }
 
-<h1>Hello World from CSCI3100!</h1>
-<body>
-  
-</body>
+  .home-hero h1 {
+    margin: 0;
+    color: #1f2937;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    letter-spacing: 0.02em;
+  }
+
+  .home-hero p {
+    margin: 10px 0 0;
+    color: #374151;
+    font-size: 1.03rem;
+  }
+
+  .home-actions {
+    margin: 16px auto 0;
+    max-width: 860px;
+    padding: 14px;
+  }
+
+  .home-actions-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .home-actions-row.second-line {
+    margin-top: 12px;
+  }
+</style>

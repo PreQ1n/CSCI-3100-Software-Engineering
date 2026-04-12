@@ -26,7 +26,7 @@ Feature: using Google Maps API to generate interactive maps of the venues select
         Given I am on the venues page
         Then I should see a map of "New Asia College" at 22.42101, 114.20922
         Then I should see a map of "Lady Shaw Building" at 22.41901, 114.20688 
-        Then I should see a map of "New Asia College" at 22.41974, 114.20395
+        Then I should see a map of "Lee Shau Kee Building" at 22.41974, 114.20395
 
     Scenario: create a new venue_record and check if its corresponding map exist
         Given I am on the venues page
@@ -35,4 +35,4 @@ Feature: using Google Maps API to generate interactive maps of the venues select
         And I fill in Venue with 4
         And I press Create Venue
         And I press Back to venues
-        Then I should see a map of Tsang Shiu Tim Building at 22.42052, 114.20452
+        Then I should see a map of "Tsang Shiu Tim Building" at 22.42052, 114.20452

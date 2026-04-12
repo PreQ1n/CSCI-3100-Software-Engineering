@@ -47,11 +47,11 @@ Scenario Outline: Navigate to different pages through account menu
     Scenario: Calendar page will show up the booked-venue record
     Given I am on the "Calendar" page
     And I have the following booked
-    | Name | Date | Time |
-    | testing_venue_1 | 2-4-2026 | 13:00 |
-    | testing_venue_2 | 10-4-2026 | 16:00 |
-    Then 2 April should show "testing_venue_1" and "13:00" on that day
-    And 10 April should show "testing_venue_2" and "16:00" on that day
+    | Name | Borrow Date | Return Date |
+    | testing_equipment_1 | 2-4-2026 | 4-4-2026 |
+    | testing_equipment_2 | 10-4-2026 | 12-4-2026 |
+    Then 2 April should show "testing_equipment_1" on that day
+    And 10 April should show "testing_equipment_2" on that day
 
     Scenario: Calendar page will show up the booked-equipment record
     Given I am on the "Calendar" page

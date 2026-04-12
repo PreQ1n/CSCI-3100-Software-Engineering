@@ -10,14 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_11_171101) do
-  create_table "cuhk_equipments", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.text "description"
-    t.string "name"
-    t.datetime "updated_at", null: false
-  end
-
+ActiveRecord::Schema[8.1].define(version: 2026_04_12_062703) do
   create_table "equipment", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "description"
@@ -27,11 +20,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_11_171101) do
   end
 
   create_table "equipment_records", force: :cascade do |t|
+    t.date "borrow_date"
+    t.datetime "confirmed_borrow_at"
+    t.datetime "confirmed_return_at"
     t.datetime "created_at", null: false
     t.date "date"
     t.integer "equipment_id", null: false
+    t.date "expected_return_date"
     t.boolean "is_absence"
-    t.boolean "is_returnLate", default: false
+    t.boolean "is_returnLate"
+    t.string "status", default: "Pending Borrow"
     t.time "time"
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
@@ -70,7 +68,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_11_171101) do
     t.text "description"
     t.decimal "latitude", precision: 10, scale: 6
     t.decimal "longitude", precision: 10, scale: 6
-    t.string "name"
+    t.string "name", null: false
     t.datetime "updated_at", null: false
     t.integer "venue_id"
     t.index ["name"], name: "index_venues_on_name"

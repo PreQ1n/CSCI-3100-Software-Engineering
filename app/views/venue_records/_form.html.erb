@@ -1,36 +1,22 @@
-<% content_for :head do %>
-  <meta name="turbo-cache-control" content="no-store">
-  <script>
-    (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
-      key: "<%= ENV['GOOGLE_MAPS_API_KEY'] %>",
-      v: "weekly",
-      region: "HK",
-      language: "en",
-    });
-  </script>
-<% end %>
-
 <%= form_with(model: venue_record, data: {turbo: false}) do |form| %>
   <% if venue_record.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(venue_record.errors.count, "error") %> prohibited this new booking record from being saved:</h2>
-
-      <ul>
-        <% venue_record.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-
+  <div class="errors">
+    <ul>
+      <% venue_record.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
   <%= form.hidden_field :venue_id, value: @venue_record.venue.id %>
 
   <div>
     <%= form.label :date, style: "display: block" %>
     <%# ← Add data-venue-id so JS knows which venue to query %>
     <%= form.date_field :date,
-          id: "booking_date",
-          data: { venue_id: @venue_record.venue.id } %>
+      id: "booking_date",
+      min: Date.current.to_s,
+      data: { venue_id: @venue_record.venue.id, resource_type: "venue" } %>
   </div>
 
   <div>
@@ -78,49 +64,7 @@
     <% end %>
   </div>
 
-      <div id="map" style="width: 50%; height: 50vh; padding: 20px;">
-      <gmp-map map-id="MAP_ID"></gmp-map>
-    </div>
-
   <div>
     <%= form.submit "Book" %>
   </div>
-
-
-<script>
-    let map;
-    let AdvancedMarkerElement;
-    let center =  { lat: <%= @venue_record.venue.latitude.present? ? @venue_record.venue.latitude : 22.3565 %>, lng: <%= @venue_record.venue.longitude.present? ? @venue_record.venue.longitude : 114.1363 %> }; // default coords
-    let selectedPlace;
-    
-    async function initMap() {
-      if (map) return;
-
-      const { Map, RenderingType } = await google.maps.importLibrary("maps");
-      const { Autocomplete } = await google.maps.importLibrary("places");
-      ({ AdvancedMarkerElement } = await google.maps.importLibrary("marker"));
-
-      window.map = new Map(document.getElementById("map"), {
-        center: center,
-        zoom: 18,
-        renderingType: RenderingType.VECTOR,
-        mapId: "MAP_ID",
-      });
-      map = window.map;
-
-      window.mapReady = true;
-
-      addMarker();
-    }
-
-    async function addMarker() {
-      const marker = new AdvancedMarkerElement({
-        map,
-        position: center,
-      });
-    }
-
-    initMap();
-  </script>
-  
 <% end %>

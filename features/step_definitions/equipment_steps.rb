@@ -1,12 +1,16 @@
 require 'rspec/expectations'
 
 Given("the following equipment exists:") do |table|
-    table.hashes.each do |attributes|
-      CuhkEquipment.create!(attributes)
-    end
+  table.hashes.each do |attributes|
+    quantity = attributes["quantity"].present? ? attributes["quantity"].to_i : 1
+    Equipment.create!(
+      name: attributes["name"],
+      description: attributes["description"],
+      quantity: quantity
+    )
   end
-  
-Given("I am on the equipment page") do
-    visit cuhk_equipments_path
 end
-  
+
+Given("I am on the equipment page") do
+  visit equipment_index_path
+end

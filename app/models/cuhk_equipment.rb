@@ -1,2 +1,0 @@
-class CuhkEquipment < ApplicationRecord
-end

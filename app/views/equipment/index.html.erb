@@ -1,20 +1,7 @@
-<style>
-  table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-  th, td { padding: 12px 20px; text-align: left; border-bottom: 1px solid #eee; }
-  th { background-color: #f8f9fa; font-weight: bold; }
+<section class="surface-card" style="padding: 16px;">
+<h1 class="title-ui">Equipment List - CUHK Venue Booking System</h1>
 
-  mark {
-    background-color: #fff3cd;
-    color: #856404;
-    padding: 0 2px;
-    border-radius: 2px;
-    font-weight: bold;
-  }
-</style>
-
-<h1>Equipment List - CUHK Venue Booking System</h1>
-
-<div style="margin: 20px 0;">
+<div style="margin: 14px 0;">
 <%= form_with(url: equipment_index_path, method: :get, data:{
   controller: "search-form", turbo_frame: "equipments", turbo_action: "advance"}) do |form| %>
   <div style="display: flex; gap: 10px; align-items: center;">
@@ -25,11 +12,11 @@
                       data: { 
                         action: "input -> search-form#search" 
                       },
-                      style: "width: 300px; padding: 8px;" %>
-    <%= form.button type: :submit, style: "padding: 8px 20px; ..." do %>
+                      style: "width: 300px; padding: 9px 11px; border: 1px solid #e2e8f0; border-radius: 9px;" %>
+    <%= form.button type: :submit, class: "btn-ui" do %>
       <i class="bi bi-search"></i> Search
     <% end %>      
-    <%= link_to equipment_index_path, style: "margin-left: 10px; color: #666; text-decoration: none; display: flex; align-items: center; gap: 5px;" do %>
+    <%= link_to equipment_index_path, class: "btn-ui" do %>
       <i class="bi bi-arrow-counterclockwise"></i> Clear
     <% end %>   
   </div>
@@ -40,8 +27,5 @@
   <%= render "equipments", equipments: @equipments %>
 </div>
 
-<%= link_to "Create New Equipment", new_equipment_path, class: "px-4 py-4 
-font-medium bg-orange-300 text-neutral-900 rounded
-inline-flex items-center cursor-pointer
-hover:bg-orange-400 focus:ring-4 ring-0
-focus:ring-orange-100" %>
+<%= link_to "Create New Equipment", new_equipment_path, class: "btn-ui secondary" %>
+</section>
