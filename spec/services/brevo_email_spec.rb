@@ -40,9 +40,9 @@ RSpec.describe BrevoEmail, type: :service do
     end
   end
 
-  # venue_booking_cancelled
-  describe ".venue_booking_cancelled" do
-    before { BrevoEmail.venue_booking_cancelled(user, venue_record) }
+  # venue_attendance_confirmed
+  describe ".venue_attendance_confirmed" do
+    before { BrevoEmail.venue_attendance_confirmed(user, venue_record) }
     let(:mail) { BrevoEmail.deliveries.last }
 
     it "sends to the correct recipient" do
@@ -50,7 +50,25 @@ RSpec.describe BrevoEmail, type: :service do
     end
 
     it "has correct subject" do
-      expect(mail[:subject]).to eq("Booking Cancellation")
+      expect(mail[:subject]).to eq("Attendance Confirmation")
+    end
+
+    it "includes venue name in body" do
+      expect(mail[:html]).to include(venue.name)
+    end
+  end
+
+  # venue_absence_reminder
+  describe ".venue_absence_reminder" do
+    before { BrevoEmail.venue_absence_reminder(user, venue_record) }
+    let(:mail) { BrevoEmail.deliveries.last }
+
+    it "sends to the correct recipient" do
+      expect(mail[:to]).to eq(user.email)
+    end
+
+    it "has correct subject" do
+      expect(mail[:subject]).to eq("Absence Reminder")
     end
 
     it "includes venue name in body" do
@@ -76,9 +94,9 @@ RSpec.describe BrevoEmail, type: :service do
     end
   end
 
-  # equipment_booking_cancelled
-  describe ".equipment_booking_cancelled" do
-    before { BrevoEmail.equipment_booking_cancelled(user, equipment_record) }
+  # equipment_attendance_confirmed
+  describe ".equipment_attendance_confirmed" do
+    before { BrevoEmail.equipment_attendance_confirmed(user, equipment_record) }
     let(:mail) { BrevoEmail.deliveries.last }
 
     it "sends to the correct recipient" do
@@ -86,7 +104,25 @@ RSpec.describe BrevoEmail, type: :service do
     end
 
     it "has correct subject" do
-      expect(mail[:subject]).to eq("Booking Cancellation")
+      expect(mail[:subject]).to eq("Attendance Confirmation")
+    end
+
+    it "includes equipment name in body" do
+      expect(mail[:html]).to include(equipment.name)
+    end
+  end
+
+  # equipment_absence_reminder
+  describe ".equipment_absence_reminder" do
+    before { BrevoEmail.equipment_absence_reminder(user, equipment_record) }
+    let(:mail) { BrevoEmail.deliveries.last }
+
+    it "sends to the correct recipient" do
+      expect(mail[:to]).to eq(user.email)
+    end
+
+    it "has correct subject" do
+      expect(mail[:subject]).to eq("Absence Reminder")
     end
 
     it "includes equipment name in body" do
