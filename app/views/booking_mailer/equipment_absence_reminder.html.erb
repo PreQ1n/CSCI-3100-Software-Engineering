@@ -1,0 +1,11 @@
+<h2>Absence Reminder</h2>
+<p>Dear <%= user.email %>,</p>
+<p>We regret to inform you that you were marked as absent for your equipment booking as you did not present on time.</p>
+<p>Please be reminded to attend all booked timeslots punctually.</p>
+<p>Here are your booking details:</p>
+<ul>
+  <li><strong>Equipment:</strong> <%= equipment_record.equipment.name %></li>
+  <li><strong>Date:</strong> <%= equipment_record.date %></li>
+  <li><strong>Time:</strong> <%= equipment_record.time.strftime("%H:%M") %></li>
+</ul>
+<p>If you have any questions, please contact support.</p>

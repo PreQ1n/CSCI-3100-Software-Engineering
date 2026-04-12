@@ -1,0 +1,12 @@
+<h2>Absence Reminder</h2>
+<p>Dear <%= user.email %>,</p>
+<p>We regret to inform you that you were marked as absent for your venue booking as you did not present on time.</p>
+<p>Please be reminded to attend all booked timeslots punctually.</p>
+<p>Here are your booking details:</p>
+<ul>
+  <li><strong>Venue:</strong> <%= venue_record.venue.name %></li>
+  <li><strong>Building:</strong> <%= venue_record.venue.building %></li>
+  <li><strong>Date:</strong> <%= venue_record.date %></li>
+  <li><strong>Time:</strong> <%= venue_record.time.strftime("%H:%M") %></li>
+</ul>
+<p>If you have any questions, please contact support.</p>
