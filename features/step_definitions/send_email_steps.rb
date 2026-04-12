@@ -10,14 +10,6 @@ Given(/^the following users exist:$/) do |table|
   end
 end
 
-# Given(/^the following venues exist:$/) do |table|
-#   table.hashes.each do |row|
-#     Venue.create!(
-#       name:     row["name"],
-#       building: row["building"]
-#     )
-#   end
-# end
 
 Given(/^the following equipment exist:$/) do |table|
   table.hashes.each do |row|
@@ -56,70 +48,61 @@ Given(/^the following equipment_records exist:$/) do |table|
   end
 end
 
-# Authentication Steps
-# -----
-Given (/^a user is logged in as "([^"]*)"$/) do |email|
-  @current_user = User.find_by!(email: email)
-end
-
-Given (/^a staff member is logged in$/) do
-  # Create or find a staff/admin user in the system
-  @staff = User.find_or_create_by!(email: "staff@example.com") do |u|
-    u.password_digest = BCrypt::Password.create("password")
-  end
-end
-
-# Page Navigation Step
-# -----
-Given (/^the user is on the venue booking confirmation page$/) do
-  @venue_record = VenueRecord.find_by!(user: @current_user, is_absence: false)
-end
-
-Given (/^the user is on the equipment booking confirmation page$/) do
-  @equipment_record = EquipmentRecord.find_by!(user: @current_user, is_absence: false)
-end
-
-Given (/^the staff is on the venue absence management page$/) do
-  @venue_record = VenueRecord.first
-  @booking_user = User.find(@venue_record.user_id)
-end
-
-Given (/^the staff is on the equipment absence management page$/) do
-  @equipment_record = EquipmentRecord.first
-  @booking_user = User.find(@equipment_record.user_id)
-end
-
 # Action Step
 # -----
-When (/^the user presses "([^"]*)"$/) do |button|
-  target = @venue_record || @equipment_record
-  recipient = @current_user
-  if target.is_a?(VenueRecord)
-    BrevoEmail.venue_booking_confirmed(recipient, target)
+When (/^a venue record is created for "([^"]*)" at "([^"]*)" on "(\d{4}-\d{2}-\d{2})" at "(\d{2}:\d{2})"$/) do |email, venue_name, date, time|
+  user  = User.find_by!(email: email)
+  venue = Venue.find_by!(name: venue_name)
+  @venue_record = VenueRecord.create!(
+    user: user, venue: venue,
+    date: Date.parse(date), time: Time.zone.parse(time),
+    is_absence: nil
+  )
+  BrevoEmail.venue_booking_confirmed(user, @venue_record)
+end
+
+When (/^an equipment record is created for "([^"]*)" for "([^"]*)" on "(\d{4}-\d{2}-\d{2})" at "(\d{2}:\d{2})"$/) do |email, equipment_name, date, time|
+  user      = User.find_by!(email: email)
+  equipment = Equipment.find_by!(name: equipment_name)
+  @equipment_record = EquipmentRecord.create!(
+    user: user, equipment: equipment,
+    date: Date.parse(date), time: Time.zone.parse(time),
+    is_absence: nil
+  )
+  BrevoEmail.equipment_booking_confirmed(user, @equipment_record)
+end
+
+When(/^the is_absence value of venue record is updated as (true|false) for "([^"]*)" at "([^"]*)" on "(\d{4}-\d{2}-\d{2})" at "(\d{2}:\d{2})"$/) do |value, email, venue_name, date, time|
+  user          = User.find_by!(email: email)
+  venue         = Venue.find_by!(name: venue_name)
+  @venue_record = VenueRecord.create!(
+    user: user, venue: venue,
+    date: Date.parse(date), time: Time.zone.parse(time),
+    is_absence: nil)
+  @venue_record.update!(is_absence: value == "true")
+  if @venue_record.is_absence
+    BrevoEmail.venue_absence_reminder(user, @venue_record)
   else
-    BrevoEmail.equipment_booking_confirmed(recipient, target)
+    BrevoEmail.venue_attendance_confirmed(user, @venue_record)
   end
 end
 
-When (/^the staff marks the venue booking as absent and presses "([^"]*)"$/) do |button|
-  @venue_record.update!(is_absence: true)
-  BrevoEmail.venue_booking_cancelled(@booking_user, @venue_record)
-end
-
-When (/^the staff marks the equipment booking as absent and presses "([^"]*)"$/) do |button|
-  @equipment_record.update!(is_absence: true)
-  BrevoEmail.equipment_booking_cancelled(@booking_user, @equipment_record)
+When(/^the is_absence value of equipment record is updated as (true|false) for "([^"]*)" for "([^"]*)" on "(\d{4}-\d{2}-\d{2})" at "(\d{2}:\d{2})"$/) do |value, email, equipment_name, date, time|
+  user              = User.find_by!(email: email)
+  equipment         = Equipment.find_by!(name: equipment_name)
+  @equipment_record = EquipmentRecord.create!(
+    user: user, equipment: equipment,
+    date: Date.parse(date), time: Time.zone.parse(time),
+    is_absence: nil)
+  @equipment_record.update!(is_absence: value == "true")
+  if @equipment_record.is_absence
+    BrevoEmail.equipment_absence_reminder(user, @equipment_record)
+  else
+    BrevoEmail.equipment_attendance_confirmed(user, @equipment_record)
+  end
 end
 
 # Assertion Steps
-Then (/^the venue_record is_absence should be (true|false)$/) do |value|
-  expect(@venue_record.reload.is_absence).to eq(value == "true")
-end
-
-Then (/^the equipment_record is_absence should be (true|false)$/) do |value|
-  expect(@equipment_record.reload.is_absence).to eq(value == "true")
-end
-
 Then (/^the user "([^"]*)" should receive a ([^"]*) email$/) do |email, type|
   @last_email = BrevoEmail.deliveries.last
   expect(@last_email).not_to be_nil
@@ -140,10 +123,4 @@ Then (/^the email body should include the equipment name and booking date and ti
   expect(@last_email[:html]).to include(@equipment_record.equipment.name)
   expect(@last_email[:html]).to include(@equipment_record.date.to_s)
   expect(@last_email[:html]).to include(@equipment_record.time.strftime("%H:%M"))
-end
-
-Then (/^the user should be redirected to the home page$/) do
-end
-
-Then (/^the staff should be redirected to the home page$/) do
 end
