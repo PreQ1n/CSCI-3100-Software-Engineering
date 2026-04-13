@@ -16,7 +16,7 @@
     <%= form.date_field :date,
       id: "booking_date",
       min: Date.current.to_s,
-      data: { venue_id: @venue_record.venue.id, resource_type: "venue" } %>
+      data: { venue_id: @venue_record.venue_id, resource_type: "venue" } %>
   </div>
 
   <div>

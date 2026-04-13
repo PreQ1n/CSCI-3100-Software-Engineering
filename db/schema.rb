@@ -28,7 +28,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_12_062703) do
     t.integer "equipment_id", null: false
     t.date "expected_return_date"
     t.boolean "is_absence"
-    t.boolean "is_returnLate"
+    t.boolean "is_returnLate", default: false
     t.string "status", default: "Pending Borrow"
     t.time "time"
     t.datetime "updated_at", null: false
@@ -68,7 +68,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_12_062703) do
     t.text "description"
     t.decimal "latitude", precision: 10, scale: 6
     t.decimal "longitude", precision: 10, scale: 6
-    t.string "name", null: false
+    t.string "name"
     t.datetime "updated_at", null: false
     t.integer "venue_id"
     t.index ["name"], name: "index_venues_on_name"
