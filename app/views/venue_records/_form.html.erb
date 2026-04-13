@@ -1,70 +1,156 @@
+<% content_for :head do %>
+  <meta name="turbo-cache-control" content="no-store">
+  <script>
+    (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
+      key: "<%= ENV['GOOGLE_MAPS_API_KEY'] %>",
+      v: "weekly",
+      region: "HK",
+      language: "en",
+    });
+  </script>
+<% end %>
+
 <%= form_with(model: venue_record, data: {turbo: false}) do |form| %>
   <% if venue_record.errors.any? %>
-  <div class="errors">
-    <ul>
-      <% venue_record.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-    </ul>
-  </div>
-<% end %>
-  <%= form.hidden_field :venue_id, value: @venue_record.venue.id %>
-
-  <div>
-    <%= form.label :date, style: "display: block" %>
-    <%# ← Add data-venue-id so JS knows which venue to query %>
-    <%= form.date_field :date,
-      id: "booking_date",
-      min: Date.current.to_s,
-      data: { venue_id: @venue_record.venue_id, resource_type: "venue" } %>
-  </div>
-
-  <div>
-    <%= form.label :time, "Select a Time Slot", style: "display: block; font-weight: bold; margin-bottom: 8px;" %>
-
-    <%# Hidden field stores the selected time on submit %>
-    <%= form.hidden_field :time, id: "selected_time_value" %>
-
-    <%
-      # Pre-load booked times if date already known (edit form or validation error re-render)
-      selected_date = @venue_record.date
-      booked_times  = selected_date ? VenueRecord
-        .where(venue_id: @venue_record.venue.id, date: selected_date)
-        .where.not(id: @venue_record.id)
-        .pluck(:time)
-        .map { |t| t.strftime("%H:%M") } : []
-    %>
-
-    <table class="timeslot-table">
-      <thead>
-        <tr>
-          <th>Hour</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% (9..21).each do |hour| %>
-          <tr>
-            <% [":00"].each do |min| %>
-              <% slot       = "#{hour.to_s.rjust(2,'0')}#{min}" %>
-              <% is_booked  = booked_times.include?(slot) %>
-              <% is_selected = @venue_record.time&.strftime("%H:%M") == slot %>
-              <td class="timeslot <%= is_booked ? 'booked' : 'available' %> <%= is_selected ? 'selected' : '' %>"
-                  data-time="<%= slot %>"
-                  <%= 'data-booked="true"' if is_booked %>>
-                <%= is_booked ? "Booked" : slot %>
-              </td>
-            <% end %>
-          </tr>
+    <div class="errors">
+      <ul>
+        <% venue_record.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
         <% end %>
-      </tbody>
-    </table>
+      </ul>
+    </div>
+  <% end %>
 
-    <% if @venue_record.errors[:time].any? %>
-      <p style="color: red; margin-top: 4px;"><%= @venue_record.errors[:time].first %></p>
-    <% end %>
+  <div class="venue_record-form-layout">
+    <div>
+      <%= form.hidden_field :venue_id, value: @venue_record.venue.id %>
+
+      <div>
+        <%= form.label :date, style: "display: block; font-weight: bold;" %>
+        <%# ← Add data-venue-id so JS knows which venue to query %>
+        <%= form.date_field :date,
+          id: "booking_date",
+          min: Date.current.to_s,
+          data: { venue_id: @venue_record.venue_id, resource_type: "venue" } %>
+      </div>
+
+      <div>
+        <%= form.label :time, "Select a Time Slot", style: "display: block; font-weight: bold; margin-bottom: 8px;" %>
+
+        <%# Hidden field stores the selected time on submit %>
+        <%= form.hidden_field :time, id: "selected_time_value" %>
+
+        <%
+          # Pre-load booked times if date already known (edit form or validation error re-render)
+          selected_date = @venue_record.date
+          booked_times  = selected_date ? VenueRecord
+            .where(venue_id: @venue_record.venue.id, date: selected_date)
+            .where.not(id: @venue_record.id)
+            .pluck(:time)
+            .map { |t| t.strftime("%H:%M") } : []
+        %>
+
+        <table class="timeslot-table">
+          <thead>
+            <tr>
+              <th>Hour</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% (9..21).each do |hour| %>
+              <tr>
+                <% [":00"].each do |min| %>
+                  <% slot       = "#{hour.to_s.rjust(2,'0')}#{min}" %>
+                  <% is_booked  = booked_times.include?(slot) %>
+                  <% is_selected = @venue_record.time&.strftime("%H:%M") == slot %>
+                  <td class="timeslot <%= is_booked ? 'booked' : 'available' %> <%= is_selected ? 'selected' : '' %>"
+                      data-time="<%= slot %>"
+                      <%= 'data-booked="true"' if is_booked %>>
+                    <%= is_booked ? "Booked" : slot %>
+                  </td>
+                <% end %>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+
+        <% if @venue_record.errors[:time].any? %>
+          <p style="color: red; margin-top: 4px;"><%= @venue_record.errors[:time].first %></p>
+        <% end %>
+      </div>
+
+      <div>
+        <%= form.submit "Book" %>
+      </div>
+    </div>
+
+    <div class="venue_record-map-panel">
+      <div id="map" class="venue_record-map-canvas"></div>
+    </div>
   </div>
 
-  <div>
-    <%= form.submit "Book" %>
-  </div>
+  <style>
+    .venue_record-form-layout {
+      display: grid;
+      grid-template-columns: minmax(320px, 1fr) minmax(340px, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .venue_record-map-panel {
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      background: #ffffff;
+      padding: 12px;
+    }
+
+    .venue_record-map-canvas {
+      width: 100%;
+      height: 52vh;
+      min-height: 360px;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+  </style>
+
+  <script>
+    let map;
+    let marker;
+
+    const initialLat = <%= @venue_record.venue.latitude || "NaN" %>;
+    const initialLng = <%= @venue_record.venue.longitude || "NaN" %>;
+
+    let center = (!Number.isNaN(initialLat) && !Number.isNaN(initialLng))
+      ? { lat: initialLat, lng: initialLng }
+      : { lat: 22.3565, lng: 114.1363 }; // default CUHK area
+
+    function setMarker(position) {
+      if (marker) {
+        marker.setPosition(position);
+      } else {
+        marker = new google.maps.Marker({ map: map, position: position });
+      }
+    }
+    
+    async function initMap() {
+      if (map) return;
+
+      const { Map, RenderingType } = await google.maps.importLibrary("maps");
+
+      window.map = new Map(document.getElementById("map"), {
+        center: center,
+        zoom: 18,
+        renderingType: RenderingType.VECTOR,
+        mapId: "MAP_ID",
+      });
+      map = window.map;
+
+      // Show existing marker on edit page when coordinates already exist.
+      if (!Number.isNaN(initialLat) && !Number.isNaN(initialLng)) {
+        setMarker(center);
+      }
+    }
+
+    initMap();
+  </script>
 <% end %>

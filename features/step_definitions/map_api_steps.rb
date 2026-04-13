@@ -1,26 +1,5 @@
-Given('the following venues exists:') do |table|
-    table.hashes.each do |row|
-        Venue.create!(
-            id: row["venue_id"].to_i,  
-            name: row["name"],
-            building: row["building"],
-            latitude: row["latitude"],
-            longitude: row["longitude"]
-        )
-    end
-end
-
-Given('the following venue_records exists:') do |table|
-    table.hashes.each do |row|
-        record = VenueRecord.new(
-            date: row["date"],
-            is_absence: "true",
-            time: row["time"],
-            user: User.find_by!(id: row["user_id"]),
-            venue: Venue.find_by!(id: row["venue_id"].to_i)  
-        )
-        record.save(validate: false)
-    end
+Given('a venue named {string} exists with lat: {float} and lng: {float}') do |string, float, float2|
+  @venue = Venue.create!(name: string, latitude: float, longitude: float2)
 end
 
 # This is here because js testing requires logging in
@@ -33,42 +12,19 @@ Given('I am logged in as {string} with password {string}') do |email, password|
   expect(page).to have_current_path(root_path)
 end
 
-Given('I am on the venue booking page of {string}') do |string|
-    venue = Venue.find_by!(name: string)
-    visit new_venue_record_path(venue_id: venue.venue_id)
-end
-
-Given('I am on the create new venues page') do
-    visit new_venue_path
+Given('I am on the venue booking page of the venue') do
+    visit new_venue_record_path(venue_id: @venue.venue_id)
 end
 
 Then('I should see a map available') do
-    expect(page).to have_css("#map", visible: true)
+    isMapPresent = page.execute_script("return window.map !== undefined && window.map !== null")
+    expect(isMapPresent).to eq(true)
 end
 
-Then('the map is centered on the coordinates of {string}') do |string|
-    venue = Venue.find_by!(name: string)
+Then('the map is centered on the coordinates of the venue') do
+    pageLat = page.execute_script("return window.map.getCenter().lat()").round(5)
+    pageLng = page.execute_script("return window.map.getCenter().lng()").round(5)
     
-    expect(venue.latitude.round(5)).to eq(page.execute_script("return window.map.getCenter().lat()").round(5))
-    expect(venue.longitude.round(5)).to eq(page.execute_script("return window.map.getCenter().lng()").round(5))
-end
-
-Then('the map is centered on the default coordinates') do
-    expect(page.execute_script("return window.map.getCenter().lat()").round(5)).to eq(22.3565)
-    expect(page.execute_script("return window.map.getCenter().lng()").round(5)).to eq(114.1363)
-end
-
-Then('I search for {string} in the name field') do |string|
-    fill_in("search-input", with: string)
-    sleep 2
-    # find first dropdown
-    find("#search-input").send_keys(:down)
-    sleep 1
-    find('.pac-item', match: :first).click
-    sleep 1
-end
-
-Then('the map is centered on lat: {float} long: {float}') do |float, float2|
-    expect(page.execute_script("return window.map.getCenter().lat()").round(5)).to eq(float.round(5))
-    expect(page.execute_script("return window.map.getCenter().lng()").round(5)).to eq(float2.round(5))
+    expect(pageLat).to eq(@venue.latitude.round(5))
+    expect(pageLng).to eq(@venue.longitude.round(5))
 end
