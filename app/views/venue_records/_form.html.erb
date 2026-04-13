@@ -12,7 +12,6 @@
 
   <div>
     <%= form.label :date, style: "display: block" %>
-    <%# ← Add data-venue-id so JS knows which venue to query %>
     <%= form.date_field :date,
       id: "booking_date",
       min: Date.current.to_s,
