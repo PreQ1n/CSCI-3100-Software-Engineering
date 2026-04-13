@@ -1,75 +1,30 @@
-Given('the following users exists:') do |table|
-    first_user = nil
-    table.hashes.each do |row|
-        user = User.create!(
-            id: row["id"],
-            email: row["email"],
-            password: row["password"],
-            admin: true
-        )
-        first_user ||= user
-    end
-
-    visit(login_path)
-    fill_in("Email", with: first_user.email)
-    fill_in("Password", with: table.hashes.first["password"])
-    click_button("Login")
+Given('a venue named {string} exists with lat: {float} and lng: {float}') do |string, float, float2|
+  @venue = Venue.create!(name: string, latitude: float, longitude: float2)
 end
 
-Given('the following venues exists:') do |table|
-    table.hashes.each do |row|
-        Venue.create!(
-            id: row["venue_id"].to_i,  
-            name: row["name"],
-            building: row["building"],
-            latitude: row["latitude"],
-            longitude: row["longitude"]
-        )
-    end
+# This is here because js testing requires logging in
+Given('I am logged in as {string} with password {string}') do |email, password|
+  @current_user = User.create!(email: email, password: password)
+  visit login_path
+  fill_in("Email", with: email)
+  fill_in("Password", with: password)
+  click_button("Login")
+  expect(page).to have_current_path(root_path)
 end
 
-Given('the following venue_records exists:') do |table|
-    table.hashes.each do |row|
-        record = VenueRecord.new(
-            date: row["date"],
-            is_absence: "true",
-            time: row["time"],
-            user: User.find_by!(id: row["user_id"]),
-            venue: Venue.find_by!(id: row["venue_id"].to_i)  
-        )
-        record.save(validate: false)
-    end
+Given('I am on the venue booking page of the venue') do
+    visit new_venue_record_path(venue_id: @venue.venue_id)
 end
 
-Then('I should see a map of {string} at {float}, {float}') do |venue_name, lat, long|
-        venue = Venue.find_by!(name: venue_name)
-        expect(page).to have_content(venue_name)
-        expect(venue.latitude.to_f).to eq(lat)
-        expect(venue.longitude.to_f).to eq(long)
+Then('I should see a map available') do
+    isMapPresent = page.execute_script("return window.map !== undefined && window.map !== null")
+    expect(isMapPresent).to eq(true)
 end
 
-When('I click {string}') do |button_name|
-  click_button button_name
-end
-
-When('I fill in Name with {string}') do |name_value|
-        if page.has_css?("#search-input", wait: 5)
-            find("#search-input", visible: :all).set(name_value)
-        elsif page.has_field?("venue_name", wait: 2)
-            fill_in("venue_name", with: name_value)
-        else
-            fill_in("Name", with: name_value)
-        end
-end
-
-When('I fill in Venue with {int}') do |venue_id_value|
-        @selected_test_venue_id = venue_id_value
-end
-
-When('I press Create Venue') do
-    click_button('Create Venue')
-end
-
-When('I press Back to venues') do
-  click_link('Back to venues')
+Then('the map is centered on the coordinates of the venue') do
+    pageLat = page.execute_script("return window.map.getCenter().lat()").round(5)
+    pageLng = page.execute_script("return window.map.getCenter().lng()").round(5)
+    
+    expect(pageLat).to eq(@venue.latitude.round(5))
+    expect(pageLng).to eq(@venue.longitude.round(5))
 end
