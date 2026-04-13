@@ -2,10 +2,10 @@ require "rails_helper"
 
 RSpec.describe BrevoEmail, type: :service do
   let(:user) { User.create!(email: "user@example.com", password: "password123", password_confirmation: "password123") }
-  let(:venue) { Venue.create!(name: "Hall A", building: "Block B") }
-  let(:venue_record) { VenueRecord.create!(user: user, venue: venue, date: Date.today, time: "10:00", is_absence: false) }
+  let(:venue) { Venue.create!(name: "LT1", building: "LSB", latitude: "22.41901", longitude: "114.20688") }
+  let(:venue_record) { VenueRecord.create!(user: user, venue: venue, date: Date.today, time: "10:00", is_absence: nil) }
   let(:equipment) { Equipment.create!(name: "Projector", quantity: 5) }
-  let(:equipment_record) { EquipmentRecord.create!(user: user, equipment: equipment, date: Date.today, time: "10:00", is_absence: false) }
+  let(:equipment_record) { EquipmentRecord.create!(user: user, equipment: equipment, date: Date.today, time: "10:00", is_absence: false, borrow_date: Date.today, expected_return_date: Date.today + 3) }
 
   # Stub Brevo API — no real emails sent
   before do
