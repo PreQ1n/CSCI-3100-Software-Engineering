@@ -1,21 +1,3 @@
-Given('the following users exists:') do |table|
-    first_user = nil
-    table.hashes.each do |row|
-        user = User.create!(
-            id: row["id"],
-            email: row["email"],
-            password: row["password"],
-            admin: true
-        )
-        first_user ||= user
-    end
-
-    visit(login_path)
-    fill_in("Email", with: first_user.email)
-    fill_in("Password", with: table.hashes.first["password"])
-    click_button("Login")
-end
-
 Given('the following venues exists:') do |table|
     table.hashes.each do |row|
         Venue.create!(
@@ -41,35 +23,52 @@ Given('the following venue_records exists:') do |table|
     end
 end
 
-Then('I should see a map of {string} at {float}, {float}') do |venue_name, lat, long|
-        venue = Venue.find_by!(name: venue_name)
-        expect(page).to have_content(venue_name)
-        expect(venue.latitude.to_f).to eq(lat)
-        expect(venue.longitude.to_f).to eq(long)
+# This is here because js testing requires logging in
+Given('I am logged in as {string} with password {string}') do |email, password|
+  @current_user = User.create!(email: email, password: password)
+  visit login_path
+  fill_in("Email", with: email)
+  fill_in("Password", with: password)
+  click_button("Login")
+  expect(page).to have_current_path(root_path)
 end
 
-When('I click {string}') do |button_name|
-  click_button button_name
+Given('I am on the venue booking page of {string}') do |string|
+    venue = Venue.find_by!(name: string)
+    visit new_venue_record_path(venue_id: venue.venue_id)
 end
 
-When('I fill in Name with {string}') do |name_value|
-        if page.has_css?("#search-input", wait: 5)
-            find("#search-input", visible: :all).set(name_value)
-        elsif page.has_field?("venue_name", wait: 2)
-            fill_in("venue_name", with: name_value)
-        else
-            fill_in("Name", with: name_value)
-        end
+Given('I am on the create new venues page') do
+    visit new_venue_path
 end
 
-When('I fill in Venue with {int}') do |venue_id_value|
-        @selected_test_venue_id = venue_id_value
+Then('I should see a map available') do
+    expect(page).to have_css("#map", visible: true)
 end
 
-When('I press Create Venue') do
-    click_button('Create Venue')
+Then('the map is centered on the coordinates of {string}') do |string|
+    venue = Venue.find_by!(name: string)
+    
+    expect(venue.latitude.round(5)).to eq(page.execute_script("return window.map.getCenter().lat()").round(5))
+    expect(venue.longitude.round(5)).to eq(page.execute_script("return window.map.getCenter().lng()").round(5))
 end
 
-When('I press Back to venues') do
-  click_link('Back to venues')
+Then('the map is centered on the default coordinates') do
+    expect(page.execute_script("return window.map.getCenter().lat()").round(5)).to eq(22.3565)
+    expect(page.execute_script("return window.map.getCenter().lng()").round(5)).to eq(114.1363)
+end
+
+Then('I search for {string} in the name field') do |string|
+    fill_in("search-input", with: string)
+    sleep 2
+    # find first dropdown
+    find("#search-input").send_keys(:down)
+    sleep 1
+    find('.pac-item', match: :first).click
+    sleep 1
+end
+
+Then('the map is centered on lat: {float} long: {float}') do |float, float2|
+    expect(page.execute_script("return window.map.getCenter().lat()").round(5)).to eq(float.round(5))
+    expect(page.execute_script("return window.map.getCenter().lng()").round(5)).to eq(float2.round(5))
 end
