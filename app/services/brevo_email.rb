@@ -18,6 +18,11 @@ class BrevoEmail
   end
 
   def self.send_email(to:, subject:, html:)
+    unless to.present? && to.match?(/\A[^@\s]+@[^@\s]+\z/)
+      Rails.logger.warn "[BrevoEmail] Skipped sending '#{subject}' — invalid email: #{to.inspect}"
+      return nil
+    end
+
     SibApiV3Sdk.configure { |c| c.api_key["api-key"] = ENV["BREVO_API"] }
     api = SibApiV3Sdk::TransactionalEmailsApi.new
 
@@ -31,6 +36,13 @@ class BrevoEmail
     response = api.send_transac_email(email)
     self.deliveries << { to: to, subject: subject, html: html }
     response
+
+  rescue SibApiV3Sdk::ApiError => e
+    Rails.logger.error "[BrevoEmail] Brevo API error sending '#{subject}' to #{to}: #{e.message} (HTTP #{e.code})"
+    nil
+  rescue StandardError => e
+    Rails.logger.error "[BrevoEmail] Unexpected error sending '#{subject}' to #{to}: #{e.message}"
+    nil
   end
 
   # public methods
@@ -53,7 +65,7 @@ class BrevoEmail
     html = render("equipment_attendance_confirmed", user: user, equipment_record: equipment_record)
     send_email(to: user.email, subject: "Attendance Confirmation", html: html)
   end
-  
+
   def self.venue_absence_reminder(user, venue_record)
     html = render("venue_absence_reminder", user: user, venue_record: venue_record)
     send_email(to: user.email, subject: "Absence Reminder", html: html)
