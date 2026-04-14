@@ -70,8 +70,7 @@ group :development, :test do
 
   gem "simple_calendar"
 
-  gem 'faker'
-
+  gem "faker"
 end
 
 group :development do
@@ -85,8 +84,9 @@ group :test do
   gem "selenium-webdriver"
   gem "cucumber"
   gem "database_cleaner-active_record"
-  gem 'rspec-expectations'
+  gem "rspec-expectations"
   gem "rspec"
   gem "cuprite"
   gem "email_spec"
+  gem "simplecov", require: false
 end

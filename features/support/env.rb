@@ -9,6 +9,8 @@ require 'capybara/cucumber'
 require 'selenium-webdriver'
 require 'email_spec'
 require 'email_spec/cucumber'
+require 'simplecov'
+SimpleCov.start
 
 Before do
   ActionMailer::Base.deliveries.clear
