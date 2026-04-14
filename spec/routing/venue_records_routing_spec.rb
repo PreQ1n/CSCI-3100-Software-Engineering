@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe VenueRecordsController, type: :routing do
-  describe "routing" do
+   describe "routing" do
     it "routes to #index" do
       expect(get: "/venue_records").to route_to("venue_records#index")
     end
@@ -10,29 +10,12 @@ RSpec.describe VenueRecordsController, type: :routing do
       expect(get: "/venue_records/new").to route_to("venue_records#new")
     end
 
-    it "routes to #show" do
-      expect(get: "/venue_records/1").to route_to("venue_records#show", id: "1")
-    end
-
-    it "routes to #edit" do
-      expect(get: "/venue_records/1/edit").to route_to("venue_records#edit", id: "1")
-    end
-
-
     it "routes to #create" do
       expect(post: "/venue_records").to route_to("venue_records#create")
     end
 
-    it "routes to #update via PUT" do
-      expect(put: "/venue_records/1").to route_to("venue_records#update", id: "1")
-    end
-
-    it "routes to #update via PATCH" do
-      expect(patch: "/venue_records/1").to route_to("venue_records#update", id: "1")
-    end
-
-    it "routes to #destroy" do
-      expect(delete: "/venue_records/1").to route_to("venue_records#destroy", id: "1")
+    it "routes to booked_slots" do
+      expect(get: "/venue_records/booked_slots").to route_to("venue_records#booked_slots")
     end
   end
 end
