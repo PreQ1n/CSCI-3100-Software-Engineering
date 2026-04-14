@@ -7,6 +7,9 @@
 # Ignore bundler config.
 /.bundle
 
+# temporary ignore coverage test
+/coverage
+
 # Ignore all environment files.
 /.env*
 # Allow .env.example
