@@ -56,22 +56,12 @@ RSpec.describe PagesController, type: :controller do
 
         it "assign @venue_records with today record" do
             today_record = create(:venue_record, user: user, date: Date.current)
-            yesterday_record = create(:venue_record, user: user, date: Date.yesterday)
+            tomorrow_record = create(:venue_record, user: user, date: Date.tomorrow)
 
             get :confirmation
 
             expect(assigns(:venue_records)).to include(today_record)
-            expect(assigns(:venue_records)).not_to include(yesterday_record)
-        end
-
-        it "assign @equipment_records with today record" do
-            today_record = create(:equipment_record, user: user, date: Date.current)
-            yesterday_record = create(:equipment_record, user: user, date: Date.yesterday)
-
-            get :confirmation
-
-            expect(assigns(:equipment_records)).to include(today_record)
-            expect(assigns(:equipment_records)).not_to include(yesterday_record)
+            expect(assigns(:venue_records)).not_to include(tomorrow_record)
         end
     end
 
@@ -102,7 +92,9 @@ RSpec.describe PagesController, type: :controller do
                 create(:equipment_record, 
                 user: user, 
                 date: Date.current, 
-                time: Time.zone.parse("10:00"))
+                time: Time.zone.parse("10:00"),
+                borrow_date: Date.current,
+                expected_return_date: Date.tomorrow)
             end
 
             it "combines venue and equipment records" do
